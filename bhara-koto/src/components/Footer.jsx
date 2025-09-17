@@ -13,6 +13,7 @@ export default function Footer({ tr }) {
                 borderRadius: 16,
             }}
         >
+            {/* Main wrapper for the top section */}
             <div
                 style={{
                     display: "flex",
@@ -25,10 +26,10 @@ export default function Footer({ tr }) {
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <img
                         src="/logo-bharakoto.jpg"
-                        alt="ভাড়া কত? logo"
+                        alt="ভাড়া কত? logo"
                         style={{ height: 36, width: 36, objectFit: "cover", borderRadius: 6 }}
                     />
-                    <strong>ভাড়া কত?</strong>
+                    <strong>ভাড়া কত?</strong>
                 </div>
 
                 <nav style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
@@ -38,6 +39,9 @@ export default function Footer({ tr }) {
                 </nav>
             </div>
 
+            {/* --- */}
+
+            {/* Main wrapper for the bottom section */}
             <div
                 style={{
                     marginTop: 14,
@@ -48,9 +52,18 @@ export default function Footer({ tr }) {
                     flexWrap: "wrap",
                 }}
             >
-                <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
-                    <span>© {year} ভাড়া কত?</span>
-                    <span>🚌 {tr.footerMade}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, flexWrap: "wrap" }}>
+                    <span>© {year} ভাড়া কত?</span>
+                    {/* Credits line */}
+                    <div style={{ marginTop: 6, fontSize: 13, color: "#334155", display: "flex", gap: 8, flexWrap: "wrap" }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                            {tr.footerDesignBy}: <strong><a href="https://www.instagram.com/uwusha_a" style={{ color: "#0a8f3d", textDecoration: "none" }}>Jannatul Haque Usha</a></strong>
+                        </span>
+                        <span>·</span>
+                        <span>
+                            {tr.footerDevelopedBy}: <strong><a href="https://facebook.com/mhbappi05" style={{ color: "#0a8f3d", textDecoration: "none" }}>Md Mahmudul Hasan</a></strong>
+                        </span>
+                    </div>
                 </div>
 
                 {/* Socials */}
@@ -76,20 +89,9 @@ export default function Footer({ tr }) {
                     <IconLink label="GitHub" href="https://github.com/mhbappi05">
                         <GitHubIcon />
                     </IconLink>
-
                 </div>
-               
             </div>
-             {/* Credits line */}
-             <div style={{ marginTop: 6, fontSize: 13, color: "#334155", display: "justify-content", gap: 8, flexWrap: "wrap" }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        {tr.footerDesignBy}: <strong><a href="https://www.instagram.com/uwusha_a" style={{ color: "#0a8f3d", textDecoration: "none" }}>Jannatul Haque Usha</a></strong>
-                    </span>
-                    <span>·</span>
-                    <span>
-                        {tr.footerDevelopedBy}: <strong><a href="https://facebook.com/mhbappi05" style={{ color: "#0a8f3d", textDecoration: "none" }}>Md Mahmudul Hasan</a></strong>
-                    </span>
-                </div>
+            <span style={{ display: 'block', textAlign: 'center', marginTop: 14 }}>🚌 {tr.footerMade}</span>
         </footer>
     );
 }

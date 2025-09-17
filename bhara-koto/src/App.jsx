@@ -8,6 +8,8 @@ import Footer from "./components/Footer.jsx";
 import Tabs from "./components/Tabs.jsx";
 import FareTable from "./components/FareTable.jsx";
 import Notices from "./components/Notices.jsx";
+import MapPicker from "./components/MapPicker.jsx";
+
 
 
 
@@ -135,6 +137,10 @@ export default function App() {
               onChange={setTo}
               options={stations}
             />
+
+            {/*   
+        <MapPicker from={from} to={to} setFrom={setFrom} setTo={setTo} /> 
+        */}
 
             <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "8px 0 24px" }}>
               <input
