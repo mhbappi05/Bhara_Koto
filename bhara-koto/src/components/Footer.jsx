@@ -1,100 +1,112 @@
 import React from "react";
 
 export default function Footer({ tr }) {
-    const year = new Date().getFullYear();
-    return (
-        <footer
-            style={{
-                marginTop: 40,
-                padding: "18px 16px",
-                borderTop: "1px solid #e2e8f0",
-                color: "#475569",
-                background: "#fafafa",
-                borderRadius: 16,
-            }}
-        >
-            {/* Main wrapper for the top section */}
-            <div
-                style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 14,
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                }}
-            >
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <img
-                        src="/logo-bharakoto.jpg"
-                        alt="ভাড়া কত? logo"
-                        style={{ height: 36, width: 36, objectFit: "cover", borderRadius: 6 }}
-                    />
-                    <strong>ভাড়া কত?</strong>
-                </div>
+  const year = new Date().getFullYear();
 
-                <nav style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-                    <a href="#" style={linkStyle}>{tr.footerAbout}</a>
-                    <a href="#" style={linkStyle}>{tr.footerDisclaimer}</a>
-                    <a href="#" style={linkStyle}>{tr.footerData}</a>
-                </nav>
-            </div>
+  // Reusable inline styles for cleaner code
+  const containerStyle = {
+    marginTop: 40,
+    padding: "24px 20px",
+    background: "#e9f5e9", // A light green color
+    color: "#1f2937", // Main text color set to a very dark gray (almost black)
+    borderRadius: 16,
+    borderTop: "1px solid #e5e7eb",
+    boxShadow: "0 -4px 12px rgba(0,0,0,0.04)",
+  };
 
-            {/* --- */}
+  const sectionStyle = {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 20,
+    marginBottom: 20,
+    borderBottom: "1px solid #e5e7eb",
+    paddingBottom: 16,
+  };
 
-            {/* Main wrapper for the bottom section */}
-            <div
-                style={{
-                    marginTop: 14,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: 16,
-                    flexWrap: "wrap",
-                }}
-            >
-                <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, flexWrap: "wrap" }}>
-                    <span>© {year} ভাড়া কত?</span>
-                    {/* Credits line */}
-                    <div style={{ marginTop: 6, fontSize: 13, color: "#334155", display: "flex", gap: 8, flexWrap: "wrap" }}>
-                        <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                            {tr.footerDesignBy}: <strong><a href="https://www.instagram.com/uwusha_a" style={{ color: "#0a8f3d", textDecoration: "none" }}>Jannatul Haque Usha</a></strong>
-                        </span>
-                        <span>·</span>
-                        <span>
-                            {tr.footerDevelopedBy}: <strong><a href="https://facebook.com/mhbappi05" style={{ color: "#0a8f3d", textDecoration: "none" }}>Md Mahmudul Hasan</a></strong>
-                        </span>
-                    </div>
-                </div>
+  const linkStyle = {
+    textDecoration: "none",
+    color: "#0d9488", // A more distinct, modern green
+    fontWeight: 600,
+    transition: "color 0.2s ease",
+  };
+  
+  return (
+    <footer style={containerStyle}>
+      {/* Top Section */}
+      <div style={sectionStyle}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <img
+            src="/logo-bharakoto.jpg"
+            alt="ভাড়া কত? logo"
+            style={{ height: 40, width: 40, borderRadius: 8 }}
+          />
+          <strong style={{ fontSize: 18, color: "#1f2937" }}>ভাড়া কত?</strong>
+        </div>
 
-                {/* Socials */}
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontSize: 13, marginRight: 6 }}>{tr.footerFollow}:</span>
+        {/* <nav style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
+          <a href="#" style={linkStyle}>{tr.footerAbout}</a>
+          <a href="#" style={linkStyle}>{tr.footerDisclaimer}</a>
+          <a href="#" style={linkStyle}>{tr.footerData}</a>
+        </nav> */}
+      </div>
 
-                    <IconLink label="Facebook" href="https://facebook.com/mhbappi05">
-                        <FacebookIcon />
-                    </IconLink>
+      {/* Bottom Section */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 16,
+          flexWrap: "wrap",
+        }}
+      >
+        {/* Credits */}
+        <div style={{ display: "flex", flexDirection: "column", fontSize: 13, color: "#4b5563" }}>
+          <span style={{ fontWeight: 500 }}>© {year} ভাড়া কত?</span>
+          <div style={{ marginTop: 8, display: "flex", flexWrap: "wrap", gap: 12 }}>
+            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              {tr.footerDesignBy}: 
+              <a href="https://www.instagram.com/uwusha_a" style={linkStyle}>
+                <strong>Jannatul Haque Usha</strong>
+              </a>
+            </span>
+            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              {tr.footerDevelopedBy}: 
+              <a href="https://facebook.com/mhbappi05" style={linkStyle}>
+                <strong>Md Mahmudul Hasan</strong>
+              </a>
+            </span>
+          </div>
+        </div>
 
-                    <IconLink label="X (Twitter)" href="https://x.com/mhbappi05">
-                        <XIcon />
-                    </IconLink>
+        {/* Socials */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 14, color: "#4b5563", fontWeight: 500 }}>{tr.footerFollow}:</span>
 
-                    <IconLink label="Instagram" href="https://instagram.com/mhbappi05">
-                        <InstagramIcon />
-                    </IconLink>
-
-                    <IconLink label="YouTube" href="https://youtube.com/@yourchannel">
-                        <YouTubeIcon />
-                    </IconLink>
-
-                    <IconLink label="GitHub" href="https://github.com/mhbappi05">
-                        <GitHubIcon />
-                    </IconLink>
-                </div>
-            </div>
-            <span style={{ display: 'block', textAlign: 'center', marginTop: 14 }}>🚌 {tr.footerMade}</span>
-        </footer>
-    );
+          <IconLink label="Facebook" href="https://facebook.com/mhbappi05">
+            <FacebookIcon />
+          </IconLink>
+          <IconLink label="Instagram" href="https://instagram.com/mhbappi05">
+            <InstagramIcon />
+          </IconLink>
+          <IconLink label="X (Twitter)" href="https://x.com/mhbappi05">
+            <XIcon />
+          </IconLink>
+          <IconLink label="GitHub" href="https://github.com/mhbappi05">
+            <GitHubIcon />
+          </IconLink>
+        </div>
+      </div>
+      <span style={{ display: "block", textAlign: "center", marginTop: 20, fontSize: 14, color: "#1f2937" }}>
+        🚌 {tr.footerMade}
+      </span>
+    </footer>
+  );
 }
+
+// IconLink and all SVG functions code.
 
 function IconLink({ href, label, children }) {
     return (
