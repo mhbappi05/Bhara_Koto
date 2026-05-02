@@ -35,6 +35,29 @@ export const t = (lang) => ({
   tabHome: lang === LANGS.BN ? "হোম" : "Home",
   tabFare: lang === LANGS.BN ? "ভাড়া তালিকা" : "Fare Table",
   tabNotices: lang === LANGS.BN ? "নোটিশ" : "Notices",
+  mapModeOn: lang === LANGS.BN ? "ম্যাপে রুট নির্বাচন করুন" : "Pick route on map",
+  mapModeOff: lang === LANGS.BN ? "স্টেশন সার্চ ব্যবহার করুন" : "Use station search",
+  mapHint:
+    lang === LANGS.BN
+      ? "প্রথমে শুরুর পয়েন্ট, তারপর গন্তব্যে ক্লিক করুন"
+      : "Click start point first, then destination",
+  mapReset: lang === LANGS.BN ? "রুট রিসেট" : "Reset route",
+  mapInstructionTitle:
+    lang === LANGS.BN ? "ম্যাপ রুট ব্যবহারের নিয়ম" : "How to use map route picker",
+  mapStartSet: lang === LANGS.BN ? "শুরুর পয়েন্ট সেট" : "Start selected",
+  mapStartPending: lang === LANGS.BN ? "শুরুর পয়েন্ট দিন" : "Pick start",
+  mapDestinationSet: lang === LANGS.BN ? "গন্তব্য সেট" : "Destination selected",
+  mapDestinationPending: lang === LANGS.BN ? "গন্তব্য দিন" : "Pick destination",
+  mapModeCardTitle: lang === LANGS.BN ? "ম্যাপ রুট মোড" : "Map Route Mode",
+  searchModeCardTitle: lang === LANGS.BN ? "স্টেশন সার্চ মোড" : "Station Search Mode",
+  mapModeCardHint:
+    lang === LANGS.BN
+      ? "ম্যাপে দুটি পয়েন্টে ক্লিক করে দূরত্ব এবং ভাড়া বের করুন।"
+      : "Click two points on the map to calculate route distance and fare.",
+  searchModeCardHint:
+    lang === LANGS.BN
+      ? "From এবং To স্টেশন নির্বাচন করে ভাড়া ও মিল থাকা বাস রুট দেখুন।"
+      : "Select from and to stations to get fare and matching bus routes.",
 
   fareTableTitle: lang === LANGS.BN ? "সম্পূর্ণ ভাড়া তালিকা" : "All Fares",
   colFrom: lang === LANGS.BN ? "কোথা থেকে" : "From",

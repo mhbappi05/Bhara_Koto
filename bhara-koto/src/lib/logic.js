@@ -5,6 +5,17 @@ const RATE = 2.45; // BDT/km
 const MIN_STD = 10;
 const MIN_STU = 10;
 
+export function estimateFareByDistance(distanceKm) {
+    const numericDistance = Number(distanceKm);
+    if (Number.isNaN(numericDistance) || numericDistance <= 0) return null;
+
+    const base = Math.max(numericDistance * RATE, MIN_STD);
+    return {
+        standard: Math.round(base),
+        student: Math.round(Math.max(base / 2, MIN_STU)),
+    };
+}
+
 /** Calculate fare following the spec:
  * 1) Use predefined fare if available
  * 2) Else, query Google Distance Matrix (if API key provided)
@@ -28,9 +39,10 @@ export async function calcFare({ chart, from, to, isStudent }) {
         if (distance == null || Number.isNaN(distance)) {
             return { error: "no-source" }; // neither fare nor distance available
         }
-        base = distance * RATE; // FR1.3
+        const estimated = estimateFareByDistance(distance);
+        if (!estimated) return { error: "no-source" };
+        return { ...estimated, usedPredefined: false };
     }
-
     base = Math.max(base, MIN_STD); // FR1.4
     const standard = Math.round(base);
     const student = Math.round(Math.max(base / 2, MIN_STU)); // FR1.5/FR1.6

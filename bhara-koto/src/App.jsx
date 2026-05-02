@@ -8,6 +8,8 @@ import Footer from "./components/Footer.jsx";
 import Tabs from "./components/Tabs.jsx"; // Assuming this is a horizontal tab component
 import FareTable from "./components/FareTable.jsx";
 import Notices from "./components/Notices.jsx";
+import RouteMapPicker from "./components/RouteMapPicker.jsx";
+import { estimateFareByDistance } from "./lib/logic.js";
 
 
 // Reusable components
@@ -60,6 +62,7 @@ export default function App() {
   const [fare, setFare] = useState(null);
   const [direct, setDirect] = useState([]);
   const [transfers, setTransfers] = useState([]);
+  const [mapMode, setMapMode] = useState(false);
 
   const [tab, setTab] = useState("home");
   const [loaded, setLoaded] = useState(false);
@@ -94,6 +97,29 @@ export default function App() {
     setDirect(d);
     if (d.length === 0) setTransfers(findTwoBus({ routes, from, to }));
   }
+
+  function onMapRouteReady(route) {
+    setDirect([]);
+    setTransfers([]);
+    if (!route) {
+      setFare(null);
+      return;
+    }
+
+    const mappedFare = estimateFareByDistance(route.distanceKm);
+    if (!mappedFare) {
+      setFare({ error: "no-source" });
+      return;
+    }
+
+    setFrom(route.fromLabel);
+    setTo(route.toLabel);
+    setFare({
+      ...mappedFare,
+      usedPredefined: false,
+      mapDistanceKm: route.distanceKm,
+    });
+  }
 
   // Function to handle tab changes and close the menu
   const handleTabChange = (newTab) => {
@@ -168,10 +194,10 @@ export default function App() {
 
   const formSectionStyle = {
     marginTop: "1rem",
-    background: "#f9f9f9",
-    padding: "1rem",
+    background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
+    padding: "1.1rem",
     borderRadius: 16,
-    boxShadow: "0 6px 20px rgba(0,0,0,0.05)",
+    boxShadow: "0 10px 25px rgba(15, 23, 42, 0.08)",
   };
 
   const goButtonStyle = {
@@ -186,6 +212,26 @@ export default function App() {
     boxShadow: "0 4px 10px rgba(10,143,61,0.3)",
     transition: "background 0.2s, transform 0.2s",
   };
+
+  const modeToggleStyle = {
+    border: "none",
+    background: mapMode ? "#0f766e" : "#0a8f3d",
+    color: "#ffffff",
+    padding: "0.62rem 1rem",
+    borderRadius: 10,
+    cursor: "pointer",
+    marginBottom: "0.75rem",
+    fontWeight: 700,
+    boxShadow: "0 6px 14px rgba(10, 143, 61, 0.25)",
+  };
+
+  const formIntroCardStyle = {
+    background: "#ffffff",
+    border: "1px solid #dbeafe",
+    borderRadius: 12,
+    padding: "0.8rem 0.9rem",
+    marginBottom: "0.85rem",
+  };
 
   const whatsappButtonStyle = {
     display: "inline-block",
@@ -376,6 +422,32 @@ export default function App() {
         <>
           {/* Form */}
           <div style={formSectionStyle}>
+            <div style={formIntroCardStyle}>
+              <p style={{ margin: 0, color: "#1e293b", fontWeight: 700 }}>
+                {mapMode ? (tr.mapModeCardTitle || "Map Route Mode") : (tr.searchModeCardTitle || "Station Search Mode")}
+              </p>
+              <p style={{ margin: "0.3rem 0 0", color: "#475569", fontSize: "0.9rem" }}>
+                {mapMode
+                  ? (tr.mapModeCardHint || "Click two points on the map to calculate route distance and fare.")
+                  : (tr.searchModeCardHint || "Select from and to stations to get fare and matching bus routes.")}
+              </p>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button
+                type="button"
+                style={modeToggleStyle}
+                onClick={() => {
+                  setMapMode((prev) => !prev);
+                  setFare(null);
+                  setDirect([]);
+                  setTransfers([]);
+                }}
+              >
+                {mapMode ? (tr.mapModeOff || "Use station search") : (tr.mapModeOn || "Pick route on map")}
+              </button>
+            </div>
+
+            <>
             <LocationSelect
               id="from"
               label={tr.from}
@@ -392,11 +464,17 @@ export default function App() {
               onChange={setTo}
               options={stations}
             />
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <button onClick={onGo} style={goButtonStyle}>
                 {tr.go}
               </button>
             </div>
+            </>
+            {mapMode && (
+              <div style={{ marginTop: "0.9rem" }}>
+                <RouteMapPicker tr={tr} onRouteReady={onMapRouteReady} />
+              </div>
+            )}
           </div>
           {fare && fare.error === "empty-input" && <Notice text="From/To পূরণ করুন।" />}
           {fare && fare.error === "no-source" && (
@@ -426,6 +504,11 @@ export default function App() {
                   <div style={fareValueStyle}>{BDT(fare.student)}</div>
                 </div>
               </div>
+              {fare.mapDistanceKm && (
+                <p style={{ marginBottom: 0, color: "#334155", marginTop: "0.75rem", fontWeight: 600 }}>
+                  {(tr.colDistance || "Distance (km)")} : {fare.mapDistanceKm.toFixed(2)} km
+                </p>
+              )}
             </div>
           )}
           <Section title={tr.directRoutes}>
