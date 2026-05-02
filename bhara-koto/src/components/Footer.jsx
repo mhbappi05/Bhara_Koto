@@ -99,9 +99,6 @@ export default function Footer({ tr }) {
           </IconLink>
         </div>
       </div>
-      <span style={{ display: "block", textAlign: "center", marginTop: 20, fontSize: 14, color: "#1f2937" }}>
-        🚌 {tr.footerMade}
-      </span>
     </footer>
   );
 }

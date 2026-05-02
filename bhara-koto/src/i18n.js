@@ -23,7 +23,6 @@ export const t = (lang) => ({
   footerAbout: lang === LANGS.BN ? "প্রকল্প সম্পর্কে" : "About Project",
   footerDisclaimer: lang === LANGS.BN ? "ডিসক্লেইমার" : "Disclaimer",
   footerData: lang === LANGS.BN ? "ডেটা সোর্স" : "Data Sources",
-  footerMade: lang === LANGS.BN ? "ভালোবাসা দিয়ে তৈরি" : "Made with love",
   footerFollow: lang === LANGS.BN ? "অনুসরণ করুন" : "Follow",
   footerContact: lang === LANGS.BN ? "যোগাযোগ করুন" : "Contact",
   missingTitle: lang === LANGS.BN ? "ভাড়া পাওয়া যায়নি" : "Fare not found",
