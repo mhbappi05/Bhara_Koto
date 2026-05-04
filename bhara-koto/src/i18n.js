@@ -72,6 +72,13 @@ export const t = (lang) => ({
   colTo: lang === LANGS.BN ? "কোথায়" : "To",
   colDistance: lang === LANGS.BN ? "দূরত্ব (কিমি)" : "Distance (km)",
   colFare: lang === LANGS.BN ? "ভাড়া (৳)" : "Fare (BDT)",
+  farePaginationPrev: lang === LANGS.BN ? "আগের পৃষ্ঠা" : "Previous",
+  farePaginationNext: lang === LANGS.BN ? "পরের পৃষ্ঠা" : "Next",
+  farePaginationSummary:
+    lang === LANGS.BN
+      ? "দেখানো {start}–{end} / মোট {total} সারি"
+      : "Showing {start}–{end} of {total} rows",
+  farePaginationPage: lang === LANGS.BN ? "পৃষ্ঠা" : "Page",
   searchPlaceholder:
     lang === LANGS.BN ? "অনুসন্ধান করুন..." : "Search from/to…",
   noRoutes: lang === LANGS.BN ? "কোনো রুট পাওয়া যায়নি" : "No routes found",
