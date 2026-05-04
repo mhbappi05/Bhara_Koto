@@ -5,6 +5,11 @@ export default function Notices({ tr }) {
 
   const notices = [
     {
+      date: "2026-05-05",
+      text: tr.noticeMajorUpdateText,
+      highlight: true,
+    },
+    {
       date: "2025-09-19",
       text: tr.notice1Text,
       link: "https://brta.gov.bd/site/page/2c13b3f1-d5ec-4405-a146-825a14fb3877/Public-Bus-Fare-of-Dhaka-Metro",
@@ -74,14 +79,31 @@ export default function Notices({ tr }) {
             style={{
               padding: 16,
               borderRadius: 12,
-              background: "#fafafa",
-              border: "1px solid #ededed",
+              background: n.highlight ? "#ecfdf5" : "#fafafa",
+              border: n.highlight ? "1px solid #6ee7b7" : "1px solid #ededed",
               transition: "transform 0.2s ease, box-shadow 0.2s ease",
               cursor: "pointer",
             }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,.05)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
           >
+            {n.highlight && (
+              <div
+                style={{
+                  display: "inline-block",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "#047857",
+                  background: "#d1fae5",
+                  padding: "4px 10px",
+                  borderRadius: 999,
+                  marginBottom: 8,
+                  letterSpacing: 0.3,
+                }}
+              >
+                {tr.majorUpdateBadge || "Major update"}
+              </div>
+            )}
             <div style={{ fontSize: 13, color: "#777", fontWeight: 500 }}>{n.date}</div>
             <div style={{ fontSize: 16, marginTop: 8, lineHeight: 1.5, color: "#444" }}>
               {n.text}

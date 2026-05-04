@@ -84,6 +84,19 @@ export const t = (lang) => ({
   noRoutes: lang === LANGS.BN ? "কোনো রুট পাওয়া যায়নি" : "No routes found",
 
   noticesTitle: lang === LANGS.BN ? "প্রকল্পের নোটিশ" : "Project Notices",
+  majorUpdateBadge: lang === LANGS.BN ? "বড় আপডেট" : "Major update",
+  majorUpdateBannerTitle:
+    lang === LANGS.BN ? "ওয়েবসাইটে বড় আপডেট (মে ২০২৬)" : "Major website update (May 2026)",
+  majorUpdateBannerBody:
+    lang === LANGS.BN
+      ? "ম্যাপে রুট বেছে ভাড়ার আনুমান আর ম্যাপে ঠিকানা খোঁজা—ব্যবহার আরও সহজ। বিস্তারিত নোটিশ ট্যাবে।"
+      : "Route picking on the map with fare estimates and map place search make the app easier to use. More detail under Notices.",
+  majorUpdateReadNotices: lang === LANGS.BN ? "নোটিশ দেখুন" : "View notices",
+  majorUpdateDismissAria: lang === LANGS.BN ? "আপডেট বার্তা লুকান" : "Hide update message",
+  noticeMajorUpdateText:
+    lang === LANGS.BN
+      ? "মে ২০২৬-এ আমরা একটি বড় আপডেট করেছি। এখন মানচিত্রে শুরু ও গন্তব্য বেছে রাস্তার দূরত্ব অনুযায়ী ভাড়ার আনুমান পাবেন; মানচিত্রে ঠিকানা/স্থান খুঁজে দ্রুত সেখানে যেতে পারবেন। মন্তব্য বা সমস্যা থাকলে WhatsApp-এ জানাবেন—ধন্যবাদ যে ব্যবহার করছেন।"
+      : "In May 2026 we shipped a major update: you can pick start and end on the map and get a distance-based fare estimate, and search for a place on the map to jump there. If you have feedback or spot an issue, reach us on WhatsApp—thank you for using this site.",
   footerDesignBy: lang === LANGS.BN ? "ডিজাইন" : "Design",
   footerDevelopedBy: lang === LANGS.BN ? "ডেভেলপমেন্ট" : "Developed",
 

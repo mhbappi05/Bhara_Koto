@@ -9,6 +9,9 @@ import Tabs from "./components/Tabs.jsx"; // Assuming this is a horizontal tab c
 import FareTable from "./components/FareTable.jsx";
 import Notices from "./components/Notices.jsx";
 import RouteMapPicker from "./components/RouteMapPicker.jsx";
+
+const MAJOR_UPDATE_DISMISS_KEY = "bhara-koto-major-update-dismissed";
+
 // Reusable components
 function Section({ title, children }) {
   return (
@@ -66,6 +69,23 @@ export default function App() {
 
   // New state for the menu
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const [showMajorUpdateBanner, setShowMajorUpdateBanner] = useState(() => {
+    try {
+      return globalThis.localStorage?.getItem(MAJOR_UPDATE_DISMISS_KEY) !== "1";
+    } catch {
+      return true;
+    }
+  });
+
+  function dismissMajorUpdate() {
+    try {
+      globalThis.localStorage?.setItem(MAJOR_UPDATE_DISMISS_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    setShowMajorUpdateBanner(false);
+  }
 
   useEffect(() => {
     (async () => {
@@ -422,6 +442,86 @@ export default function App() {
         <h1 style={mainTitleStyle}>{tr.title}</h1>
         <p style={{ color: "#4b5563", fontSize: "clamp(0.9rem, 3vw, 1.2rem)", marginTop: 0 }}>{tr.tagline}</p>
       </div>
+
+      {showMajorUpdateBanner && (
+        <div
+          role="region"
+          aria-label={tr.majorUpdateBannerTitle}
+          style={{
+            marginTop: "0.65rem",
+            marginBottom: "0.35rem",
+            padding: "0.9rem 1rem 0.95rem",
+            paddingRight: "2.5rem",
+            borderRadius: 14,
+            background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+            border: "1px solid #6ee7b7",
+            boxShadow: "0 8px 22px rgba(16, 185, 129, 0.14)",
+            position: "relative",
+          }}
+        >
+          <button
+            type="button"
+            onClick={dismissMajorUpdate}
+            aria-label={tr.majorUpdateDismissAria}
+            style={{
+              position: "absolute",
+              top: 6,
+              right: 8,
+              width: 36,
+              height: 36,
+              border: "none",
+              borderRadius: 8,
+              background: "transparent",
+              color: "#047857",
+              fontSize: "1.35rem",
+              lineHeight: 1,
+              cursor: "pointer",
+              fontWeight: 700,
+            }}
+          >
+            ×
+          </button>
+          <div
+            style={{
+              display: "inline-block",
+              fontSize: "0.72rem",
+              fontWeight: 800,
+              letterSpacing: 0.06,
+              textTransform: "uppercase",
+              color: "#047857",
+              background: "#a7f3d0",
+              padding: "0.2rem 0.5rem",
+              borderRadius: 6,
+              marginBottom: "0.35rem",
+            }}
+          >
+            {tr.majorUpdateBadge}
+          </div>
+          <div style={{ fontWeight: 800, color: "#065f46", fontSize: "clamp(0.98rem, 3vw, 1.12rem)", lineHeight: 1.25 }}>
+            {tr.majorUpdateBannerTitle}
+          </div>
+          <p style={{ margin: "0.45rem 0 0.75rem", color: "#134e4a", fontSize: "0.9rem", lineHeight: 1.55 }}>
+            {tr.majorUpdateBannerBody}
+          </p>
+          <button
+            type="button"
+            onClick={() => handleTabChange("notices")}
+            style={{
+              border: "none",
+              background: "#0a8f3d",
+              color: "#fff",
+              padding: "0.5rem 1rem",
+              borderRadius: 10,
+              fontWeight: 700,
+              fontSize: "0.9rem",
+              cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(10, 143, 61, 0.28)",
+            }}
+          >
+            {tr.majorUpdateReadNotices}
+          </button>
+        </div>
+      )}
 
       {/* Desktop Tabs */}
       <div className="tabs-desktop">
