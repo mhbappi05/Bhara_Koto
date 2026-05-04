@@ -1,5 +1,13 @@
 import { findFareRow } from "./data";
-import { googleDistanceKm } from "./utils";
+import { googleDistanceKm, normalize } from "./utils";
+
+const ZERO_FARE = { standard: 0, student: 0, usedPredefined: false };
+
+/** Shown in UI when fare is forced to 0 */
+export const ZERO_FARE_REASON = {
+  SAME_STATION: "same-station",
+  UNDER_1_KM: "under-1km",
+};
 
 const RATE = 2.45; // BDT/km
 const MIN_STD = 10;
@@ -7,7 +15,9 @@ const MIN_STU = 10;
 
 export function estimateFareByDistance(distanceKm) {
     const numericDistance = Number(distanceKm);
-    if (Number.isNaN(numericDistance) || numericDistance <= 0) return null;
+    if (Number.isNaN(numericDistance)) return null;
+    if (numericDistance < 1)
+        return { standard: 0, student: 0, zeroFareReason: ZERO_FARE_REASON.UNDER_1_KM };
 
     const base = Math.max(numericDistance * RATE, MIN_STD);
     return {
@@ -23,12 +33,17 @@ export function estimateFareByDistance(distanceKm) {
  */
 export async function calcFare({ chart, from, to, isStudent }) {
     if (!from || !to) return { error: "empty-input" };
+    if (normalize(from) === normalize(to))
+        return { ...ZERO_FARE, zeroFareReason: ZERO_FARE_REASON.SAME_STATION };
 
     // try fare_chart first (spec FR1.1) 
     const row = findFareRow(chart, from, to);
     let base;
 
     if (row?.fareBDT) {
+        const km = row.distanceKm;
+        if (typeof km === "number" && !Number.isNaN(km) && km < 1)
+            return { ...ZERO_FARE, zeroFareReason: ZERO_FARE_REASON.UNDER_1_KM };
         base = Number(row.fareBDT);
     } else {
         // if fare not present, try distance column in fare_chart (fallback if provided)

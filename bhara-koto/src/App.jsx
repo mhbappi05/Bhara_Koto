@@ -2,16 +2,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import { LANGS, t } from "./i18n";
 import LocationSelect from "./components/LocationSelect.jsx";
 import { loadBusRoutes, loadFareChart } from "./lib/data.js";
-import { calcFare, findDirect, findTwoBus } from "./lib/logic.js";
+import { calcFare, estimateFareByDistance, findDirect, findTwoBus, ZERO_FARE_REASON } from "./lib/logic.js";
 import { BDT } from "./lib/utils.js";
 import Footer from "./components/Footer.jsx";
 import Tabs from "./components/Tabs.jsx"; // Assuming this is a horizontal tab component
 import FareTable from "./components/FareTable.jsx";
 import Notices from "./components/Notices.jsx";
 import RouteMapPicker from "./components/RouteMapPicker.jsx";
-import { estimateFareByDistance } from "./lib/logic.js";
-
-
 // Reusable components
 function Section({ title, children }) {
   return (
@@ -263,6 +260,19 @@ export default function App() {
     marginBottom: "1rem",
   };
 
+  const zeroFareBannerStyle = {
+    marginTop: 0,
+    marginBottom: "1rem",
+    padding: "0.75rem 1rem",
+    borderRadius: 12,
+    background: "#e0f2fe",
+    color: "#0c4a6e",
+    fontSize: "0.95rem",
+    lineHeight: 1.5,
+    fontWeight: 600,
+    border: "1px solid #bae6fd",
+  };
+
   const fareGridStyle = {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
@@ -491,9 +501,19 @@ export default function App() {
             </div>
           )}
           {/* Results */}
-          {fare && (
+          {fare && !fare.error && (
             <div style={resultsSectionStyle}>
               <h3 style={resultTitleStyle}>{tr.title}</h3>
+              {fare.zeroFareReason === ZERO_FARE_REASON.SAME_STATION && (
+                <div style={zeroFareBannerStyle} role="status">
+                  {tr.zeroFareSameStation}
+                </div>
+              )}
+              {fare.zeroFareReason === ZERO_FARE_REASON.UNDER_1_KM && (
+                <div style={zeroFareBannerStyle} role="status">
+                  {tr.zeroFareUnder1km}
+                </div>
+              )}
               <div style={fareGridStyle} className="fare-grid">
                 <div style={fareBoxStyle}>
                   <div style={fareLabelStyle}>{tr.standardFare}</div>

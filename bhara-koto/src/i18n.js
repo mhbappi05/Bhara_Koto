@@ -58,6 +58,14 @@ export const t = (lang) => ({
     lang === LANGS.BN
       ? "From এবং To স্টেশন নির্বাচন করে ভাড়া ও মিল থাকা বাস রুট দেখুন।"
       : "Select from and to stations to get fare and matching bus routes.",
+  zeroFareSameStation:
+    lang === LANGS.BN
+      ? "আপনি একই স্থানকে শুরু ও শেষ হিসেবে বেছে নিয়েছেন—এ ক্ষেত্রে ভাড়া ০ ৳।"
+      : "You chose the same place for both start and destination, so the fare is 0 ৳.",
+  zeroFareUnder1km:
+    lang === LANGS.BN
+      ? "দূরত্ব ১ কিমির কম হলে ভাড়া ০ ৳ ধরা হয়েছে।"
+      : "For routes under 1 km, the fare is shown as 0 ৳.",
 
   fareTableTitle: lang === LANGS.BN ? "সম্পূর্ণ ভাড়া তালিকা" : "All Fares",
   colFrom: lang === LANGS.BN ? "কোথা থেকে" : "From",
