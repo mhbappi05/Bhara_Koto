@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
-import { MapContainer, Marker, Polyline, TileLayer, useMapEvents } from "react-leaflet";
+import React, { useEffect, useMemo, useState } from "react";
+import { MapContainer, Marker, Polyline, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
@@ -15,6 +15,26 @@ function MapClickHandler({ onPick }) {
     },
   });
   return null;
+}
+
+function MapFlyTo({ target }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!target) return;
+    const { lat, lng, zoom } = target;
+    map.flyTo([lat, lng], zoom ?? 15, { duration: 0.55 });
+  }, [target, map]);
+  return null;
+}
+
+async function searchPlaces(query) {
+  const q = query.trim();
+  if (!q) return [];
+  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bd&limit=8&q=${encodeURIComponent(q)}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("search-failed");
+  const data = await response.json();
+  return Array.isArray(data) ? data : [];
 }
 
 async function getRouteBetweenPoints(fromPoint, toPoint) {
@@ -48,6 +68,12 @@ export default function RouteMapPicker({ tr, onRouteReady }) {
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [mapSearchQuery, setMapSearchQuery] = useState("");
+  const [mapSearchResults, setMapSearchResults] = useState([]);
+  const [mapSearchLoading, setMapSearchLoading] = useState(false);
+  const [mapSearchError, setMapSearchError] = useState("");
+  const [flyToTarget, setFlyToTarget] = useState(null);
+
   const markers = useMemo(() => {
     if (!fromPoint && !toPoint) return [];
     return [
@@ -62,8 +88,38 @@ export default function RouteMapPicker({ tr, onRouteReady }) {
     setRoutePoints([]);
     setStatus("");
     setLoading(false);
+    setMapSearchResults([]);
+    setMapSearchError("");
     onRouteReady(null);
   };
+
+  async function runMapSearch() {
+    setMapSearchError("");
+    setMapSearchResults([]);
+    const q = mapSearchQuery.trim();
+    if (!q) return;
+    setMapSearchLoading(true);
+    try {
+      const results = await searchPlaces(q);
+      setMapSearchResults(results);
+      if (results.length === 0) {
+        setMapSearchError(tr.mapSearchNoResults || "No places found");
+      }
+    } catch {
+      setMapSearchError(tr.mapSearchFailed || "Search failed");
+    } finally {
+      setMapSearchLoading(false);
+    }
+  }
+
+  function onPickSearchResult(item) {
+    const lat = Number(item.lat);
+    const lng = Number(item.lon);
+    if (Number.isNaN(lat) || Number.isNaN(lng)) return;
+    setFlyToTarget({ lat, lng, zoom: 16, id: `${lat},${lng},${Date.now()}` });
+    setMapSearchResults([]);
+    setMapSearchError("");
+  }
 
   const handlePointPick = async (point) => {
     if (!fromPoint || (fromPoint && toPoint)) {
@@ -170,6 +226,103 @@ export default function RouteMapPicker({ tr, onRouteReady }) {
 
       <div
         style={{
+          marginBottom: "0.75rem",
+          padding: "0.75rem",
+          borderRadius: 12,
+          border: "1px solid #e2e8f0",
+          background: "#ffffff",
+        }}
+      >
+        <div style={{ fontWeight: 700, color: "#0f172a", marginBottom: "0.45rem", fontSize: "0.9rem" }}>
+          {tr.mapSearchLabel || "Find a place on the map"}
+        </div>
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+          <input
+            type="search"
+            value={mapSearchQuery}
+            onChange={(e) => setMapSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                runMapSearch();
+              }
+            }}
+            placeholder={tr.mapSearchPlaceholder || "Search address or place…"}
+            disabled={mapSearchLoading}
+            aria-label={tr.mapSearchLabel || "Find a place on the map"}
+            style={{
+              flex: "1 1 180px",
+              minWidth: 0,
+              padding: "0.55rem 0.75rem",
+              borderRadius: 8,
+              border: "1px solid #cbd5e1",
+              fontSize: "0.95rem",
+            }}
+          />
+          <button
+            type="button"
+            onClick={runMapSearch}
+            disabled={mapSearchLoading || !mapSearchQuery.trim()}
+            style={{
+              border: "none",
+              background: mapSearchLoading || !mapSearchQuery.trim() ? "#94a3b8" : "#0a8f3d",
+              color: "#fff",
+              padding: "0.55rem 1rem",
+              borderRadius: 8,
+              cursor: mapSearchLoading || !mapSearchQuery.trim() ? "not-allowed" : "pointer",
+              fontWeight: 700,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {mapSearchLoading ? "…" : (tr.mapSearchButton || "Search")}
+          </button>
+        </div>
+        {mapSearchError && (
+          <div style={{ marginTop: "0.5rem", color: "#b45309", fontSize: "0.88rem", fontWeight: 600 }}>
+            {mapSearchError}
+          </div>
+        )}
+        {mapSearchResults.length > 0 && (
+          <ul
+            style={{
+              margin: "0.55rem 0 0",
+              padding: 0,
+              listStyle: "none",
+              maxHeight: 200,
+              overflowY: "auto",
+              borderRadius: 8,
+              border: "1px solid #e2e8f0",
+              background: "#f8fafc",
+            }}
+          >
+            {mapSearchResults.map((item) => (
+              <li key={item.place_id}>
+                <button
+                  type="button"
+                  onClick={() => onPickSearchResult(item)}
+                  style={{
+                    width: "100%",
+                    textAlign: "left",
+                    padding: "0.55rem 0.65rem",
+                    border: "none",
+                    borderBottom: "1px solid #e2e8f0",
+                    background: "transparent",
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                    color: "#1e293b",
+                    lineHeight: 1.35,
+                  }}
+                >
+                  {item.display_name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div
+        style={{
           borderRadius: 12,
           overflow: "hidden",
           border: "1px solid #cbd5e1",
@@ -181,6 +334,7 @@ export default function RouteMapPicker({ tr, onRouteReady }) {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+          <MapFlyTo target={flyToTarget} />
           <MapClickHandler onPick={handlePointPick} />
           {markers.map((marker) => (
             <Marker key={marker.key} position={marker.position} icon={new L.Icon.Default()} />

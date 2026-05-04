@@ -130,4 +130,11 @@ export const t = (lang) => ({
     lang === LANGS.BN
       ? "আপনারা কেউ যদি এই ওয়েবসাইটে কোনো এড দিতে চান, তাহলে আমাকে হোয়াটসঅ্যাপে জানান:"
       : "If any of you want to place an ad on this website, please let me know on WhatsApp:",
+
+  mapSearchPlaceholder:
+    lang === LANGS.BN ? "ঠিকানা বা স্থানের নাম লিখুন…" : "Search address or place…",
+  mapSearchButton: lang === LANGS.BN ? "খুঁজুন" : "Search",
+  mapSearchNoResults: lang === LANGS.BN ? "কোনো স্থান পাওয়া যায়নি" : "No places found",
+  mapSearchFailed: lang === LANGS.BN ? "খোঁজে সমস্যা হয়েছে" : "Search failed",
+  mapSearchLabel: lang === LANGS.BN ? "ম্যাপে স্থান খুঁজুন" : "Find a place on the map",
 });
