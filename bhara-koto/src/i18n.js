@@ -1,7 +1,7 @@
 export const LANGS = { BN: "bn", EN: "en" };
 
 export const t = (lang) => ({
-  title: lang === LANGS.BN ? "ভাড়া কত?" : "How much is the fare?",
+  title: lang === LANGS.BN ? "ভাড়া কত?" : "Bhara Koto?",
   tagline:
     lang === LANGS.BN
       ? "আর নয় ভাড়া নিয়ে মারামারি"
@@ -97,6 +97,11 @@ export const t = (lang) => ({
     lang === LANGS.BN
       ? "মে ২০২৬-এ আমরা একটি বড় আপডেট করেছি। এখন মানচিত্রে শুরু ও গন্তব্য বেছে রাস্তার দূরত্ব অনুযায়ী ভাড়ার আনুমান পাবেন; মানচিত্রে ঠিকানা/স্থান খুঁজে দ্রুত সেখানে যেতে পারবেন। মন্তব্য বা সমস্যা থাকলে WhatsApp-এ জানাবেন—ধন্যবাদ যে ব্যবহার করছেন।"
       : "In May 2026 we shipped a major update: you can pick start and end on the map and get a distance-based fare estimate, and search for a place on the map to jump there. If you have feedback or spot an issue, reach us on WhatsApp—thank you for using this site.",
+  noticeDomainLiveText:
+    lang === LANGS.BN
+      ? "এখন থেকে আমাদের ওয়েবসাইট সরাসরি এই ঠিকানায় পাওয়া যাবে:"
+      : "You can now access the website directly at:",
+  noticeDomainLiveLink: "bharakoto.app",
   footerDesignBy: lang === LANGS.BN ? "ডিজাইন" : "Design",
   footerDevelopedBy: lang === LANGS.BN ? "ডেভেলপমেন্ট" : "Developed",
 

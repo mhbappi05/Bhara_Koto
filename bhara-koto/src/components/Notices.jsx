@@ -6,6 +6,13 @@ export default function Notices({ tr }) {
   const notices = [
     {
       date: "2026-05-05",
+      text: tr.noticeDomainLiveText,
+      link: "https://bharakoto.app",
+      linkText: tr.noticeDomainLiveLink,
+      highlight: true,
+    },
+    {
+      date: "2026-05-05",
       text: tr.noticeMajorUpdateText,
       highlight: true,
     },
