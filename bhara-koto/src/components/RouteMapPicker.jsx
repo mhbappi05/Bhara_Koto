@@ -6,6 +6,10 @@ import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 
 const DHAKA_CENTER = [23.8103, 90.4125];
+const DHAKA_DIVISION_BOUNDS = [
+  [23.0, 89.5], // south-west
+  [24.9, 91.4], // north-east
+];
 const OSRM_BASE_URL = "https://router.project-osrm.org/route/v1/driving";
 
 function MapClickHandler({ onPick }) {
@@ -329,10 +333,18 @@ export default function RouteMapPicker({ tr, onRouteReady }) {
           boxShadow: "0 10px 20px rgba(15, 23, 42, 0.08)",
         }}
       >
-        <MapContainer center={DHAKA_CENTER} zoom={12} style={{ height: 320, width: "100%" }}>
+        <MapContainer
+          center={DHAKA_CENTER}
+          zoom={12}
+          minZoom={9}
+          maxBounds={DHAKA_DIVISION_BOUNDS}
+          maxBoundsViscosity={1}
+          style={{ height: 320, width: "100%" }}
+        >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            noWrap
           />
           <MapFlyTo target={flyToTarget} />
           <MapClickHandler onPick={handlePointPick} />
