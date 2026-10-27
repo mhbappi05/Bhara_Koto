@@ -210,18 +210,6 @@ export default function App() {
     cursor: "pointer",
   };
 
-  /* const mainTitleContainerStyle = {
-    textAlign: "center",
-    marginTop: "0.5rem",
-  };
-
-  const mainTitleStyle = {
-    fontSize: "clamp(3rem, 10vw, 4.5rem)",
-    margin: "10px 0 4px",
-    letterSpacing: 2,
-    color: "#0a8f3d",
-  }; */
-
   const formSectionStyle = {
     marginTop: "1rem",
     background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
@@ -454,95 +442,83 @@ export default function App() {
         </div>
       </div>
 
-      {/* <div style={mainTitleContainerStyle}>
-        <h1 style={mainTitleStyle}>{tr.title}</h1>
-        <p style={{ color: "#4b5563", fontSize: "clamp(0.9rem, 3vw, 1.2rem)", marginTop: 0 }}>{tr.tagline}</p>
-      </div> */}
+      {/* Desktop Tabs */}
+      <div className="tabs-desktop">
+        <Tabs active={tab} onChange={setTab} tr={tr} />
+      </div>
 
       {showMajorUpdateBanner && (
         <div
           role="region"
           aria-label={tr.majorUpdateBannerTitle}
           style={{
-            marginTop: "0.65rem",
-            marginBottom: "0.35rem",
-            padding: "0.9rem 1rem 0.95rem",
-            paddingRight: "2.5rem",
-            borderRadius: 14,
-            background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
-            border: "1px solid #6ee7b7",
-            boxShadow: "0 8px 22px rgba(16, 185, 129, 0.14)",
-            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "0.5rem 0.75rem",
+            margin: "0.5rem 0 0.25rem",
+            padding: "0.5rem 0.5rem 0.5rem 0.75rem",
+            borderRadius: 12,
+            background: "#ecfdf5",
+            border: "1px solid #a7f3d0",
           }}
         >
-          <button
-            type="button"
-            onClick={dismissMajorUpdate}
-            aria-label={tr.majorUpdateDismissAria}
+          <span
             style={{
-              position: "absolute",
-              top: 6,
-              right: 8,
-              width: 36,
-              height: 36,
-              border: "none",
-              borderRadius: 8,
-              background: "transparent",
-              color: "#047857",
-              fontSize: "1.35rem",
-              lineHeight: 1,
-              cursor: "pointer",
-              fontWeight: 700,
-            }}
-          >
-            ×
-          </button>
-          <div
-            style={{
-              display: "inline-block",
               fontSize: "0.72rem",
               fontWeight: 800,
-              letterSpacing: 0.06,
-              textTransform: "uppercase",
               color: "#047857",
               background: "#a7f3d0",
-              padding: "0.2rem 0.5rem",
+              padding: "0.15rem 0.5rem",
               borderRadius: 6,
-              marginBottom: "0.35rem",
+              whiteSpace: "nowrap",
             }}
           >
             {tr.majorUpdateBadge}
-          </div>
-          <div style={{ fontWeight: 800, color: "#065f46", fontSize: "clamp(0.98rem, 3vw, 1.12rem)", lineHeight: 1.25 }}>
+          </span>
+          <span
+            style={{ flex: "1 1 14rem", fontWeight: 700, color: "#065f46", fontSize: "0.92rem", lineHeight: 1.35 }}
+          >
             {tr.majorUpdateBannerTitle}
-          </div>
-          <p style={{ margin: "0.45rem 0 0.75rem", color: "#134e4a", fontSize: "0.9rem", lineHeight: 1.55 }}>
-            {tr.majorUpdateBannerBody}
-          </p>
+          </span>
           <button
             type="button"
             onClick={() => handleTabChange("notices")}
             style={{
               border: "none",
-              background: "#0a8f3d",
-              color: "#fff",
-              padding: "0.5rem 1rem",
-              borderRadius: 10,
+              background: "transparent",
+              color: "#047857",
               fontWeight: 700,
               fontSize: "0.9rem",
+              textDecoration: "underline",
               cursor: "pointer",
-              boxShadow: "0 4px 12px rgba(10, 143, 61, 0.28)",
+              padding: "0.4rem 0.25rem",
+              minHeight: 36,
             }}
           >
             {tr.majorUpdateReadNotices}
           </button>
+          <button
+            type="button"
+            onClick={dismissMajorUpdate}
+            aria-label={tr.majorUpdateDismissAria}
+            style={{
+              border: "none",
+              background: "transparent",
+              color: "#047857",
+              fontSize: "1.35rem",
+              lineHeight: 1,
+              cursor: "pointer",
+              width: 36,
+              height: 36,
+              borderRadius: 8,
+              fontWeight: 700,
+            }}
+          >
+            ×
+          </button>
         </div>
       )}
-
-      {/* Desktop Tabs */}
-      <div className="tabs-desktop">
-        <Tabs active={tab} onChange={setTab} tr={tr} />
-      </div>
 
       {tab === "home" && (
         <>
