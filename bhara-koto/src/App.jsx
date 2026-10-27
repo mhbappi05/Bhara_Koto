@@ -197,7 +197,7 @@ export default function App() {
     cursor: "pointer",
   };
 
-  const mainTitleContainerStyle = {
+  /* const mainTitleContainerStyle = {
     textAlign: "center",
     marginTop: "0.5rem",
   };
@@ -207,7 +207,7 @@ export default function App() {
     margin: "10px 0 4px",
     letterSpacing: 2,
     color: "#0a8f3d",
-  };
+  }; */
 
   const formSectionStyle = {
     marginTop: "1rem",
@@ -401,7 +401,7 @@ export default function App() {
             }}
           />
           <div style={{ lineHeight: 1.1 }}>
-            <div style={appTitleStyle}>ভাড়া কত?</div>
+          <h1 style={{ ...appTitleStyle, margin: 0 }}>{tr.title}</h1>
             <div style={taglineStyle}>{tr.tagline}</div>
           </div>
         </div>
@@ -438,10 +438,10 @@ export default function App() {
         </div>
       </div>
 
-      <div style={mainTitleContainerStyle}>
+      {/* <div style={mainTitleContainerStyle}>
         <h1 style={mainTitleStyle}>{tr.title}</h1>
         <p style={{ color: "#4b5563", fontSize: "clamp(0.9rem, 3vw, 1.2rem)", marginTop: 0 }}>{tr.tagline}</p>
-      </div>
+      </div> */}
 
       {showMajorUpdateBanner && (
         <div
