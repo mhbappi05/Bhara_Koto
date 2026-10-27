@@ -67,12 +67,6 @@ export default function Footer({ tr }) {
           <span style={{ fontWeight: 500 }}>© {year} ভাড়া কত?</span>
           <div style={{ marginTop: 8, display: "flex", flexWrap: "wrap", gap: 12 }}>
             <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-              {tr.footerDesignBy}: 
-              <a href="https://www.instagram.com/uwusha_a" style={linkStyle}>
-                <strong>Jannatul Haque Usha</strong>
-              </a>
-            </span>
-            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
               {tr.footerDevelopedBy}: 
               <a href="https://facebook.com/mhbappi05" style={linkStyle}>
                 <strong>Md Mahmudul Hasan</strong>
@@ -133,13 +127,6 @@ function IconLink({ href, label, children }) {
         </a>
     );
 }
-
-
-/* const linkStyle = {
-    textDecoration: "none",
-    color: "#0a8f3d",
-    fontWeight: 600,
-}; */
 
 /* --- Minimal inline SVG icons (no deps) --- */
 function FacebookIcon() {

@@ -116,7 +116,6 @@ export const t = (lang) => ({
       ? "এখন থেকে আমাদের ওয়েবসাইট সরাসরি এই ঠিকানায় পাওয়া যাবে:"
       : "You can now access the website directly at:",
   noticeDomainLiveLink: "bharakoto.app",
-  footerDesignBy: lang === LANGS.BN ? "ডিজাইন" : "Design",
   footerDevelopedBy: lang === LANGS.BN ? "ডেভেলপমেন্ট" : "Developed",
 
   //payment info
