@@ -144,6 +144,14 @@ export default function App() {
     setIsMenuOpen(false); // Close menu when a tab is selected
   };
 
+  const switchMode = (toMap) => {
+    if (toMap === mapMode) return;
+    setMapMode(toMap);
+    setFare(null);
+    setDirect([]);
+    setTransfers([]);
+  };
+
   // --- Reusable Styles (Updated for Responsiveness) ---
   const containerStyle = {
     maxWidth: 980,
@@ -230,25 +238,28 @@ export default function App() {
     transition: "background 0.2s, transform 0.2s",
   };
 
-  const modeToggleStyle = {
-    border: "none",
-    background: mapMode ? "#0f766e" : "#0a8f3d",
-    color: "#ffffff",
-    padding: "0.62rem 1rem",
-    borderRadius: 10,
-    cursor: "pointer",
-    marginBottom: "0.75rem",
-    fontWeight: 700,
-    boxShadow: "0 6px 14px rgba(10, 143, 61, 0.25)",
+  const segmentWrapStyle = {
+    display: "flex",
+    gap: 4,
+    padding: 4,
+    background: "#e2e8f0",
+    borderRadius: 14,
+    marginBottom: "0.5rem",
   };
 
-  const formIntroCardStyle = {
-    background: "#ffffff",
-    border: "1px solid #dbeafe",
-    borderRadius: 12,
-    padding: "0.8rem 0.9rem",
-    marginBottom: "0.85rem",
-  };
+  const segmentStyle = (active) => ({
+    flex: 1,
+    minHeight: 44,
+    border: "none",
+    borderRadius: 10,
+    padding: "0.7rem 0.5rem",
+    fontWeight: 700,
+    fontSize: "0.95rem",
+    cursor: "pointer",
+    background: active ? "#0a8f3d" : "transparent",
+    color: active ? "#ffffff" : "#334155",
+    boxShadow: active ? "0 4px 10px rgba(10, 143, 61, 0.25)" : "none",
+  });
 
   const whatsappButtonStyle = {
     display: "inline-block",
@@ -532,32 +543,33 @@ export default function App() {
         <>
           {/* Form */}
           <div style={formSectionStyle}>
-            <div style={formIntroCardStyle}>
-              <p style={{ margin: 0, color: "#1e293b", fontWeight: 700 }}>
-                {mapMode ? (tr.mapModeCardTitle || "Map Route Mode") : (tr.searchModeCardTitle || "Station Search Mode")}
-              </p>
-              <p style={{ margin: "0.3rem 0 0", color: "#475569", fontSize: "0.9rem" }}>
-                {mapMode
-                  ? (tr.mapModeCardHint || "Click two points on the map to calculate route distance and fare.")
-                  : (tr.searchModeCardHint || "Select from and to stations to get fare and matching bus routes.")}
-              </p>
-            </div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={segmentWrapStyle} role="group" aria-label={tr.title}>
               <button
                 type="button"
-                style={modeToggleStyle}
-                onClick={() => {
-                  setMapMode((prev) => !prev);
-                  setFare(null);
-                  setDirect([]);
-                  setTransfers([]);
-                }}
+                style={segmentStyle(!mapMode)}
+                aria-pressed={!mapMode}
+                onClick={() => switchMode(false)}
               >
-                {mapMode ? (tr.mapModeOff || "Use station search") : (tr.mapModeOn || "Pick route on map")}
+                {tr.modeStation}
+              </button>
+              <button
+                type="button"
+                style={segmentStyle(mapMode)}
+                aria-pressed={mapMode}
+                onClick={() => switchMode(true)}
+              >
+                {tr.modeMap}
               </button>
             </div>
+            <p style={{ margin: "0 0 0.9rem", color: "#475569", fontSize: "0.9rem", textAlign: "center" }}>
+              {mapMode
+                ? (tr.mapModeCardHint || "Click two points on the map to calculate route distance and fare.")
+                : (tr.searchModeCardHint || "Select from and to stations to get fare and matching bus routes.")}
+            </p>
 
-            <>
+
+            {!mapMode && (
+              <>
             <LocationSelect
               id="from"
               label={tr.from}
@@ -580,6 +592,8 @@ export default function App() {
               </button>
             </div>
             </>
+            )}
+
             {mapMode && (
               <div style={{ marginTop: "0.9rem" }}>
                 <RouteMapPicker tr={tr} onRouteReady={onMapRouteReady} />
@@ -631,6 +645,8 @@ export default function App() {
               )}
             </div>
           )}
+          {!mapMode && (
+            <>
           <Section title={tr.directRoutes}>
             {direct.length === 0 ? (
               <Empty text={tr.noRoutes} />
@@ -660,6 +676,8 @@ export default function App() {
               </ul>
             )}
           </Section>
+          </>
+          )}
         </>
       )}
       {tab === "fare" && <FareTable chart={chart} tr={tr} />}

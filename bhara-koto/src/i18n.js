@@ -20,6 +20,8 @@ export const t = (lang) => ({
   englishBus: lang === LANGS.BN ? "Bus (English)" : "Bus (English)",
   transferAt: lang === LANGS.BN ? "ট্রান্সফার পয়েন্ট" : "Transfer at",
   noRoutes: lang === LANGS.BN ? "কোনো রুট পাওয়া যায়নি" : "No routes found",
+  modeStation: lang === LANGS.BN ? "স্টেশন থেকে" : "By station",
+  modeMap: lang === LANGS.BN ? "ম্যাপে বেছে নিন" : "Pick on map",
   footerAbout: lang === LANGS.BN ? "প্রকল্প সম্পর্কে" : "About Project",
   footerDisclaimer: lang === LANGS.BN ? "ডিসক্লেইমার" : "Disclaimer",
   footerData: lang === LANGS.BN ? "ডেটা সোর্স" : "Data Sources",
