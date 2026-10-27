@@ -276,15 +276,6 @@ export default function App() {
     boxShadow: "0 4px 18px rgba(0,0,0,.06)",
   };
 
-  const resultTitleStyle = {
-    marginTop: 0,
-    fontSize: "1.25rem",
-    fontWeight: 600,
-    borderBottom: "1px solid #eee",
-    paddingBottom: "0.5rem",
-    marginBottom: "1rem",
-  };
-
   const zeroFareBannerStyle = {
     marginTop: 0,
     marginBottom: "1rem",
@@ -304,22 +295,52 @@ export default function App() {
     gap: "0.75rem",
     textAlign: "center",
   };
+  const routeSummaryStyle = {
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: "0.35rem 0.6rem",
+    margin: "0 0 1rem",
+    paddingBottom: "0.75rem",
+    borderBottom: "1px solid #e5e7eb",
+    fontWeight: 700,
+    fontSize: "1.05rem",
+    color: "#0f172a",
+    lineHeight: 1.4,
+  };
+
   const fareBoxStyle = {
-    background: "#f8f8f8",
-    borderRadius: 12,
-    padding: "1rem",
+    background: "#f8fafc",
+    border: "1px solid #e2e8f0",
+    borderRadius: 14,
+    padding: "1.1rem 1rem",
+  };
+
+  const fareBoxPrimaryStyle = {
+    ...fareBoxStyle,
+    background: "#ecfdf5",
+    border: "2px solid #34d399",
   };
 
   const fareLabelStyle = {
     fontWeight: 600,
-    color: "#555",
+    color: "#475569",
     marginBottom: "0.25rem",
+    fontSize: "0.95rem",
   };
 
   const fareValueStyle = {
-    fontSize: "1.75rem",
-    fontWeight: 700,
+    fontSize: "clamp(1.9rem, 8vw, 2.6rem)",
+    fontWeight: 800,
     color: "#0a8f3d",
+    lineHeight: 1.15,
+  };
+
+  const fareNoteStyle = {
+    margin: "0.9rem 0 0",
+    color: "#64748b",
+    fontSize: "0.85rem",
+    lineHeight: 1.5,
   };
 
   // Styles for the mobile dropdown menu
@@ -599,7 +620,11 @@ export default function App() {
           {/* Results */}
           {fare && !fare.error && (
             <div style={resultsSectionStyle}>
-              <h3 style={resultTitleStyle}>{tr.title}</h3>
+              <div style={routeSummaryStyle}>
+                <span>{from}</span>
+                <span aria-hidden="true" style={{ color: "#0a8f3d" }}>→</span>
+                <span>{to}</span>
+              </div>
               {fare.zeroFareReason === ZERO_FARE_REASON.SAME_STATION && (
                 <div style={zeroFareBannerStyle} role="status">
                   {tr.zeroFareSameStation}
@@ -611,7 +636,7 @@ export default function App() {
                 </div>
               )}
               <div style={fareGridStyle} className="fare-grid">
-                <div style={fareBoxStyle}>
+                <div style={fareBoxPrimaryStyle}>
                   <div style={fareLabelStyle}>{tr.standardFare}</div>
                   <div style={fareValueStyle}>{BDT(fare.standard)}</div>
                 </div>
@@ -622,9 +647,10 @@ export default function App() {
               </div>
               {fare.mapDistanceKm && (
                 <p style={{ marginBottom: 0, color: "#334155", marginTop: "0.75rem", fontWeight: 600 }}>
-                  {(tr.colDistance || "Distance (km)")} : {fare.mapDistanceKm.toFixed(2)} km
+                  {(tr.colDistance || "Distance (km)")}: {fare.mapDistanceKm.toFixed(2)} km · {tr.fareEstimated}
                 </p>
               )}
+              <p style={fareNoteStyle}>{tr.fareDisclaimer}</p>
             </div>
           )}
           {!mapMode && searched && (

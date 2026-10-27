@@ -22,6 +22,12 @@ export const t = (lang) => ({
   noRoutes: lang === LANGS.BN ? "কোনো রুট পাওয়া যায়নি" : "No routes found",
   modeStation: lang === LANGS.BN ? "স্টেশন থেকে" : "By station",
   modeMap: lang === LANGS.BN ? "ম্যাপে বেছে নিন" : "Pick on map",
+  fareDisclaimer:
+    lang === LANGS.BN
+      ? "প্রকৃত ভাড়া সামান্য ভিন্ন হতে পারে; টোলযুক্ত বাসে ভাড়া ৫ টাকা পর্যন্ত বেশি হতে পারে।"
+      : "Actual fares may differ slightly; toll buses can charge up to ৳5 more.",
+  fareEstimated:
+    lang === LANGS.BN ? "রাস্তার দূরত্ব অনুযায়ী আনুমানিক ভাড়া" : "Estimated from road distance",
   footerAbout: lang === LANGS.BN ? "প্রকল্প সম্পর্কে" : "About Project",
   footerDisclaimer: lang === LANGS.BN ? "ডিসক্লেইমার" : "Disclaimer",
   footerData: lang === LANGS.BN ? "ডেটা সোর্স" : "Data Sources",
