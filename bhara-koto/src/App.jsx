@@ -62,6 +62,7 @@ export default function App() {
   const [fare, setFare] = useState(null);
   const [direct, setDirect] = useState([]);
   const [transfers, setTransfers] = useState([]);
+  const [searched, setSearched] = useState(false);
   const [mapMode, setMapMode] = useState(false);
 
   const [tab, setTab] = useState("home");
@@ -97,11 +98,16 @@ export default function App() {
     })();
   }, []);
 
-  async function onGo() {
-    if (!loaded) return;
+  function clearResults() {
     setFare(null);
     setDirect([]);
     setTransfers([]);
+    setSearched(false);
+  }
+
+  async function onGo() {
+    if (!loaded) return;
+    clearResults();                                  // replaces setFare(null); setDirect([]); setTransfers([]);
 
     const f = await calcFare({ chart, from, to });
     if (f?.error) {
@@ -113,6 +119,7 @@ export default function App() {
     const d = findDirect({ routes, from, to });
     setDirect(d);
     if (d.length === 0) setTransfers(findTwoBus({ routes, from, to }));
+    setSearched(true);                               // new
   }
 
   function onMapRouteReady(route) {
@@ -147,9 +154,7 @@ export default function App() {
   const switchMode = (toMap) => {
     if (toMap === mapMode) return;
     setMapMode(toMap);
-    setFare(null);
-    setDirect([]);
-    setTransfers([]);
+    clearResults();
   };
 
   // --- Reusable Styles (Updated for Responsiveness) ---
@@ -412,7 +417,7 @@ export default function App() {
             }}
           />
           <div style={{ lineHeight: 1.1 }}>
-          <h1 style={{ ...appTitleStyle, margin: 0 }}>{tr.title}</h1>
+            <h1 style={{ ...appTitleStyle, margin: 0 }}>{tr.title}</h1>
             <div style={taglineStyle}>{tr.tagline}</div>
           </div>
         </div>
@@ -543,7 +548,7 @@ export default function App() {
         <>
           {/* Form */}
           <div style={formSectionStyle}>
-          <div style={segmentWrapStyle} role="group" aria-label={tr.title}>
+            <div style={segmentWrapStyle} role="group" aria-label={tr.title}>
               <button
                 type="button"
                 style={segmentStyle(!mapMode)}
@@ -570,28 +575,28 @@ export default function App() {
 
             {!mapMode && (
               <>
-            <LocationSelect
-              id="from"
-              label={tr.from}
-              placeholder={tr.choose}
-              value={from}
-              onChange={setFrom}
-              options={stations}
-            />
-            <LocationSelect
-              id="to"
-              label={tr.to}
-              placeholder={tr.choose}
-              value={to}
-              onChange={setTo}
-              options={stations}
-            />
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <button onClick={onGo} style={goButtonStyle}>
-                {tr.go}
-              </button>
-            </div>
-            </>
+                <LocationSelect
+                  id="from"
+                  label={tr.from}
+                  placeholder={tr.choose}
+                  value={from}
+                  onChange={(v) => { setFrom(v); clearResults(); }}
+                  options={stations}
+                />
+                <LocationSelect
+                  id="to"
+                  label={tr.to}
+                  placeholder={tr.choose}
+                  value={to}
+                  onChange={(v) => { setTo(v); clearResults(); }}
+                  options={stations}
+                />
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <button onClick={onGo} style={goButtonStyle}>
+                    {tr.go}
+                  </button>
+                </div>
+              </>
             )}
 
             {mapMode && (
@@ -645,38 +650,39 @@ export default function App() {
               )}
             </div>
           )}
-          {!mapMode && (
+          {!mapMode && searched && (
             <>
-          <Section title={tr.directRoutes}>
-            {direct.length === 0 ? (
-              <Empty text={tr.noRoutes} />
-            ) : (
-              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: "0.75rem" }}>
-                {direct.map((r, i) => (
-                  <li key={i} style={card}>
-                    <div><strong>{tr.englishBus}:</strong> {r.busEn || "-"}</div>
-                    <div><strong>{tr.banglaBus}:</strong> {r.busBn || "-"}</div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
-          <Section title={tr.transfers}>
-            {transfers.length === 0 ? (
-              <Empty text={tr.noRoutes} />
-            ) : (
-              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: "0.75rem" }}>
-                {transfers.map((o, i) => (
-                  <li key={i} style={card}>
-                    <div><strong>A:</strong> {o.busA.busEn || "-"} / {o.busA.busBn || "-"}</div>
-                    <div><strong>{tr.transferAt}:</strong> {o.transfer}</div>
-                    <div><strong>B:</strong> {o.busB.busEn || "-"} / {o.busB.busBn || "-"}</div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
-          </>
+              <Section title={tr.directRoutes}>
+                {direct.length === 0 ? (
+                  <Empty text={tr.noRoutes} />
+                ) : (
+                  <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: "0.75rem" }}>
+                    {direct.map((r, i) => (
+                      <li key={i} style={card}>
+                        <div><strong>{tr.englishBus}:</strong> {r.busEn || "-"}</div>
+                        {r.busBn && <div><strong>{tr.banglaBus}:</strong> {r.busBn}</div>}
+                        {/* <div><strong>{tr.banglaBus}:</strong> {r.busBn || "-"}</div> */}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Section>
+              <Section title={tr.transfers}>
+                {transfers.length === 0 ? (
+                  <Empty text={tr.noRoutes} />
+                ) : (
+                  <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: "0.75rem" }}>
+                    {transfers.map((o, i) => (
+                      <li key={i} style={card}>
+                        <div><strong>A:</strong> {[o.busA.busEn, o.busA.busBn].filter(Boolean).join(" / ") || "-"}</div>
+                        <div><strong>{tr.transferAt}:</strong> {o.transfer}</div>
+                        <div><strong>B:</strong> {[o.busB.busEn, o.busB.busBn].filter(Boolean).join(" / ") || "-"}</div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Section>
+            </>
           )}
         </>
       )}
