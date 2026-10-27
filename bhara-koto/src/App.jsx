@@ -470,9 +470,9 @@ export default function App() {
           </div>
           <div id="mobile-menu" style={mobileMenuStyle} className="tabs-mobile">
             {[
-              ["home", tr.home],
-              ["fare", tr.fareChart],
-              ["notices", tr.notices],
+              ["home", tr.tabHome],
+              ["fare", tr.tabFare],
+              ["notices", tr.tabNotices],
             ].map(([id, label]) => (
               <button
                 key={id}
@@ -694,21 +694,24 @@ export default function App() {
                   </ul>
                 )}
               </Section>
-              <Section title={tr.transfers}>
-                {transfers.length === 0 ? (
-                  <Empty text={tr.noRoutes} />
-                ) : (
-                  <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: "0.75rem" }}>
-                    {transfers.map((o, i) => (
-                      <li key={i} style={card}>
-                        <div><strong>A:</strong> {[o.busA.busEn, o.busA.busBn].filter(Boolean).join(" / ") || "-"}</div>
-                        <div><strong>{tr.transferAt}:</strong> {o.transfer}</div>
-                        <div><strong>B:</strong> {[o.busB.busEn, o.busB.busBn].filter(Boolean).join(" / ") || "-"}</div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </Section>
+
+              {direct.length === 0 && (
+                <Section title={tr.transfers}>
+                  {transfers.length === 0 ? (
+                    <Empty text={tr.noRoutes} />
+                  ) : (
+                    <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: "0.75rem" }}>
+                      {transfers.map((o, i) => (
+                        <li key={i} style={card}>
+                          <div><strong>A:</strong> {[o.busA.busEn, o.busA.busBn].filter(Boolean).join(" / ") || "-"}</div>
+                          <div><strong>{tr.transferAt}:</strong> {o.transfer}</div>
+                          <div><strong>B:</strong> {[o.busB.busEn, o.busB.busBn].filter(Boolean).join(" / ") || "-"}</div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </Section>
+              )}
             </>
           )}
         </>
