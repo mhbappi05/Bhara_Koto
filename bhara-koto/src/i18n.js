@@ -81,7 +81,6 @@ export const t = (lang) => ({
   farePaginationPage: lang === LANGS.BN ? "পৃষ্ঠা" : "Page",
   searchPlaceholder:
     lang === LANGS.BN ? "অনুসন্ধান করুন..." : "Search from/to…",
-  noRoutes: lang === LANGS.BN ? "কোনো রুট পাওয়া যায়নি" : "No routes found",
 
   noticesTitle: lang === LANGS.BN ? "প্রকল্পের নোটিশ" : "Project Notices",
   majorUpdateBadge: lang === LANGS.BN ? "বড় আপডেট" : "Major update",

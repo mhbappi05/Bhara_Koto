@@ -35,12 +35,12 @@ export default function AboutPage({ tr }) {
     gap: "0.5rem",
   };
 
-  const linkStyle = {
+/*   const linkStyle = {
     color: "#0d9488",
     fontWeight: 600,
     textDecoration: "none",
     transition: "color 0.2s ease",
-  };
+  }; */
 
   return (
     <div style={pageContainerStyle}>

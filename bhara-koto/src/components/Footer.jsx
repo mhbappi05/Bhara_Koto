@@ -135,11 +135,11 @@ function IconLink({ href, label, children }) {
 }
 
 
-const linkStyle = {
+/* const linkStyle = {
     textDecoration: "none",
     color: "#0a8f3d",
     fontWeight: 600,
-};
+}; */
 
 /* --- Minimal inline SVG icons (no deps) --- */
 function FacebookIcon() {

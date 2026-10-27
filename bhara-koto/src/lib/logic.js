@@ -31,7 +31,7 @@ export function estimateFareByDistance(distanceKm) {
  * 2) Else, query Google Distance Matrix (if API key provided)
  * 3) Apply min fares and student discount
  */
-export async function calcFare({ chart, from, to, isStudent }) {
+export async function calcFare({ chart, from, to }) {
     if (!from || !to) return { error: "empty-input" };
     if (normalize(from) === normalize(to))
         return { ...ZERO_FARE, zeroFareReason: ZERO_FARE_REASON.SAME_STATION };
