@@ -219,7 +219,8 @@ export default function App() {
   };
 
   const goButtonStyle = {
-    width: "80%",
+    width: "100%",
+    maxWidth: 750,
     background: "#0a8f3d",
     color: "#fff",
     padding: "1rem 1.25rem",

@@ -6,9 +6,9 @@ export const t = (lang) => ({
     lang === LANGS.BN
       ? "আর নয় ভাড়া নিয়ে মারামারি"
       : "No more fighting over fares",
-  from: lang === LANGS.BN ? "গন্তব্য থেকে" : "From",
-  to: lang === LANGS.BN ? "গন্তব্য পর্যন্ত" : "To",
-  choose: lang === LANGS.BN ? "নির্বাচন করুন" : "Choose",
+  from: lang === LANGS.BN ? "কোথা থেকে" : "From",
+  to: lang === LANGS.BN ? "কোথায় যাবেন" : "To",
+  choose: lang === LANGS.BN ? "স্টেশনের নাম লিখুন বা বেছে নিন" : "Type or pick a station",
   student: lang === LANGS.BN ? "ছাত্র" : "Student",
   go: lang === LANGS.BN ? "ভাড়া জানুন!" : "Check Fare",
   directRoutes: lang === LANGS.BN ? "সরাসরি বাস" : "Direct Buses",
