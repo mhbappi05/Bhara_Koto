@@ -1,0 +1,45 @@
+html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans Bengali", "Nirmala UI",
+      "Hind Siliguri", Roboto, sans-serif;
+  }
+  
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+  
+  a {
+    color: #047857;
+  }
+  a:hover {
+    color: #065f46;
+  }
+  
+  /* Visible keyboard focus everywhere */
+  :focus-visible {
+    outline: 3px solid #0a8f3d;
+    outline-offset: 2px;
+  }
+  
+  /* Tab pills */
+  .tab-btn {
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .tab-btn:not([aria-current="page"]):hover {
+    background: #ecfdf5 !important;
+    border-color: #34d399 !important;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }

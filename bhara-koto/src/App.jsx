@@ -98,6 +98,10 @@ export default function App() {
     })();
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = lang === LANGS.BN ? "bn" : "en";
+  }, [lang]);
+
   function clearResults() {
     setFare(null);
     setDirect([]);
@@ -183,12 +187,16 @@ export default function App() {
     fontSize: "clamp(1.5rem, 5vw, 2rem)",
     fontWeight: 800,
     color: "#333",
+    lineHeight: 1.25,
+    margin: 0,
   };
 
   const taglineStyle = {
     fontSize: "clamp(0.8rem, 2.5vw, 1rem)",
     opacity: 0.7,
     color: "#555",
+    lineHeight: 1.3,
+    marginTop: 2,
   };
 
   const languageButtonStyle = {
@@ -360,14 +368,21 @@ export default function App() {
     gap: "0.5rem",
   };
 
-  const mobileMenuItemStyle = {
+  const mobileMenuItemStyle = (active) => ({
+    display: "block",
+    width: "100%",
+    minHeight: 44,
     padding: "0.75rem",
-    background: "#f0f0f0",
-    borderRadius: "6px",
+    marginBottom: 6,
+    border: "none",
+    borderRadius: 6,
+    background: active ? "#0a8f3d" : "#f0f0f0",
+    color: active ? "#fff" : "#0f172a",
     textAlign: "left",
     fontWeight: "bold",
+    fontSize: "1rem",
     cursor: "pointer",
-  };
+  });
 
   // Apply the responsive styles using a style tag or a separate CSS file
   const responsiveStyles = `
@@ -442,24 +457,33 @@ export default function App() {
               {tr.language}
             </button>
             <button
+              type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               style={menuButtonStyle}
               className="menu-button"
               aria-label="Open menu"
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
             >
               ☰
             </button>
           </div>
-          <div style={mobileMenuStyle} className="tabs-mobile">
-            <div style={mobileMenuItemStyle} onClick={() => handleTabChange("home")}>
-              {tr.home}
-            </div>
-            <div style={mobileMenuItemStyle} onClick={() => handleTabChange("fare")}>
-              {tr.fareChart}
-            </div>
-            <div style={mobileMenuItemStyle} onClick={() => handleTabChange("notices")}>
-              {tr.notices}
-            </div>
+          <div id="mobile-menu" style={mobileMenuStyle} className="tabs-mobile">
+            {[
+              ["home", tr.home],
+              ["fare", tr.fareChart],
+              ["notices", tr.notices],
+            ].map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => handleTabChange(id)}
+                aria-current={tab === id ? "page" : undefined}
+                style={mobileMenuItemStyle(tab === id)}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
       </div>
