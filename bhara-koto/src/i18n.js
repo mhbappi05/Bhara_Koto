@@ -87,6 +87,11 @@ export const t = (lang) => ({
       ? "দেখানো {start}–{end} / মোট {total} সারি"
       : "Showing {start}–{end} of {total} rows",
   farePaginationPage: lang === LANGS.BN ? "পৃষ্ঠা" : "Page",
+  fareRowsPerPage: lang === LANGS.BN ? "প্রতি পৃষ্ঠায়" : "Rows per page",
+  fareGoToPage: lang === LANGS.BN ? "পৃষ্ঠা নম্বর" : "Page number",
+  fareJumpGo: lang === LANGS.BN ? "যান" : "Go",
+  fareNoResults: lang === LANGS.BN ? "কোনো ফলাফল পাওয়া যায়নি" : "No matching fares",
+  loadingData: lang === LANGS.BN ? "লোড হচ্ছে…" : "Loading…",
   searchPlaceholder:
     lang === LANGS.BN ? "অনুসন্ধান করুন..." : "Search from/to…",
 
