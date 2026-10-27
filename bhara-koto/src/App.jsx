@@ -690,7 +690,7 @@ export default function App() {
         </>
       )}
       {tab === "fare" && <FareTable chart={chart} tr={tr} />}
-      {tab === "notices" && <Notices tr={tr} />}
+      {tab === "notices" && <Notices tr={tr} locale={lang === LANGS.BN ? "bn-BD" : "en-GB"} />}
       <Footer tr={tr} />
       <div style={{ height: "2rem" }} />
     </div>

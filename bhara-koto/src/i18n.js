@@ -91,6 +91,8 @@ export const t = (lang) => ({
     lang === LANGS.BN ? "অনুসন্ধান করুন..." : "Search from/to…",
 
   noticesTitle: lang === LANGS.BN ? "প্রকল্পের নোটিশ" : "Project Notices",
+  noticesUpdatesTitle: lang === LANGS.BN ? "সাম্প্রতিক আপডেট" : "Latest updates",
+  noticesInfoTitle: lang === LANGS.BN ? "তথ্য ও যোগাযোগ" : "Info & contact",
   majorUpdateBadge: lang === LANGS.BN ? "বড় আপডেট" : "Major update",
   majorUpdateBannerTitle:
     lang === LANGS.BN ? "ওয়েবসাইটে বড় আপডেট (মে ২০২৬)" : "Major website update (May 2026)",
