@@ -1,5 +1,5 @@
 import { findFareRow } from "./data";
-import { googleDistanceKm, normalize } from "./utils";
+import { normalize } from "./utils";
 
 const ZERO_FARE = { standard: 0, student: 0, usedPredefined: false };
 
@@ -47,9 +47,7 @@ export async function calcFare({ chart, from, to, isStudent }) {
         base = Number(row.fareBDT);
     } else {
         // if fare not present, try distance column in fare_chart (fallback if provided)
-        let distance =
-            (row && typeof row.distanceKm === "number" ? row.distanceKm : null) ??
-            (await googleDistanceKm(from, to));
+        let distance = row && typeof row.distanceKm === "number" ? row.distanceKm : null;
 
         if (distance == null || Number.isNaN(distance)) {
             return { error: "no-source" }; // neither fare nor distance available
