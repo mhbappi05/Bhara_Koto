@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { LANGS, t } from "./i18n";
 import LocationSelect from "./components/LocationSelect.jsx";
 import { loadBusRoutes, loadFareChart } from "./lib/data.js";
-import { calcFare, estimateFareByDistance, findDirect, findTwoBus, ZERO_FARE_REASON } from "./lib/logic.js";
+import { buildFareIndex, calcFare, estimateFareByDistance, findDirect, findTwoBus, legFare, ZERO_FARE_REASON } from "./lib/logic.js";
 import { BDT, normalize } from "./lib/utils.js";
 import Footer from "./components/Footer.jsx";
 import Tabs from "./components/Tabs.jsx"; // Assuming this is a horizontal tab component
@@ -54,6 +54,7 @@ export default function App() {
   const [routes, setRoutes] = useState([]);
   const [stations, setStations] = useState([]);
   const [chart, setChart] = useState([]);
+  const fareIndex = useMemo(() => buildFareIndex(chart), [chart]);
 
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -133,7 +134,18 @@ export default function App() {
 
     const d = findDirect({ routes, from, to });
     setDirect(d);
-    if (d.length === 0) setTransfers(findTwoBus({ routes, from, to }));
+    if (d.length === 0) {
+      const options = findTwoBus({ routes, from, to }).map((o) => {
+        const legA = legFare(fareIndex, from, o.transfer);
+        const legB = legFare(fareIndex, o.transfer, to);
+        const total =
+          legA && legB
+            ? { standard: legA.standard + legB.standard, student: legA.student + legB.student }
+            : null;
+        return { ...o, legA, legB, total };
+      });
+      setTransfers(options);
+    }
     setSearched(true);
   }
 
@@ -286,6 +298,20 @@ export default function App() {
     boxShadow: "0 2px 8px rgba(37,211,102,0.4)",
     transition: "background 0.2s",
   };
+
+  const noFareNotice = fare?.error === "no-source" && (
+    <div style={{ marginTop: 12 }}>
+      <Notice text="এই জোড়ার জন্য চার্টে ভাড়া/দূরত্ব নেই। অনুগ্রহ করে আমাদের সাথে যোগাযোগ করুন।" />
+      <a
+        href={`https://wa.me/8801679861740?text=ভাড়া%20ডেটা%20মিসিং:%20${encodeURIComponent(from)}%20থেকে%20${encodeURIComponent(to)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={whatsappButtonStyle}
+      >
+        📲 WhatsApp এ যোগাযোগ করুন
+      </a>
+    </div>
+  );
 
   const resultsSectionStyle = {
     marginTop: "1.5rem",
@@ -640,19 +666,7 @@ export default function App() {
           </div>
           {fare && fare.error === "empty-input" && <Notice text="From/To পূরণ করুন।" />}
           {fare && fare.error === "unknown-station" && <Notice text={tr.unknownStation} />}
-          {fare && fare.error === "no-source" && (
-            <div style={{ marginTop: 12 }}>
-              <Notice text="এই জোড়ার জন্য চার্টে ভাড়া/দূরত্ব নেই। অনুগ্রহ করে আমাদের সাথে যোগাযোগ করুন।" />
-              <a
-                href={`https://wa.me/8801679861740?text=ভাড়া%20ডেটা%20মিসিং:%20${from}%20থেকে%20${to}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={whatsappButtonStyle}
-              >
-                📲 WhatsApp এ যোগাযোগ করুন
-              </a>
-            </div>
-          )}
+          {direct.length > 0 && noFareNotice}
           {/* Results */}
           {fare && !fare.error && (
             <div style={resultsSectionStyle}>
@@ -693,7 +707,7 @@ export default function App() {
             <>
               <Section title={tr.directRoutes}>
                 {direct.length === 0 ? (
-                  <Empty text={tr.noRoutes} />
+                  <Empty text={tr.noDirectBus} />
                 ) : (
                   <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: "0.75rem" }}>
                     {direct.map((r, i) => (
@@ -715,14 +729,30 @@ export default function App() {
                     <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: "0.75rem" }}>
                       {transfers.map((o, i) => (
                         <li key={i} style={card}>
-                          <div><strong>A:</strong> {[o.busA.busEn, o.busA.busBn].filter(Boolean).join(" / ") || "-"}</div>
+                          <div>
+                            <strong>A:</strong> {[o.busA.busEn, o.busA.busBn].filter(Boolean).join(" / ") || "-"}
+                            {o.legA && <span> — {BDT(o.legA.standard)}</span>}
+                          </div>
                           <div><strong>{tr.transferAt}:</strong> {o.transfer}</div>
-                          <div><strong>B:</strong> {[o.busB.busEn, o.busB.busBn].filter(Boolean).join(" / ") || "-"}</div>
+                          <div>
+                            <strong>B:</strong> {[o.busB.busEn, o.busB.busBn].filter(Boolean).join(" / ") || "-"}
+                            {o.legB && <span> — {BDT(o.legB.standard)}</span>}
+                          </div>
+                          {o.total ? (
+                            <div style={{ marginTop: 6, fontWeight: 700, color: "#0a8f3d" }}>
+                              {tr.totalFare}: {BDT(o.total.standard)} · {tr.studentFare}: {BDT(o.total.student)}
+                            </div>
+                          ) : (
+                            <div style={{ marginTop: 6, color: "#64748b", fontSize: "0.9rem" }}>
+                              {tr.legFareMissing}
+                            </div>
+                          )}
                           <div style={{ color: "#64748b", fontSize: "0.9rem" }}>~{o.stops} {tr.stationsAway}</div>
                         </li>
                       ))}
                     </ul>
                   )}
+                  {noFareNotice}
                 </Section>
               )}
             </>

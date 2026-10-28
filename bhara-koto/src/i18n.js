@@ -31,6 +31,13 @@ export const t = (lang) => ({
   unknownStation:
     lang === LANGS.BN ? "তালিকা থেকে সঠিক স্টেশন বেছে নিন।" : "Please pick a station from the list.",
   stationsAway: lang === LANGS.BN ? "স্টেশন" : "stations",
+  noDirectBus:
+    lang === LANGS.BN
+      ? "এই রুটে কোনো সরাসরি বাস নেই, আপনাকে ধাপে ধাপে গন্তব্যে যেতে হবে।"
+      : "There is no direct bus on this route; you will need to travel in steps.",
+  totalFare: lang === LANGS.BN ? "মোট ভাড়া" : "Total fare",
+  legFareMissing:
+    lang === LANGS.BN ? "এই যাত্রার ভাড়া চার্টে পাওয়া যায়নি" : "Fare for this trip isn't in the chart",
   footerAbout: lang === LANGS.BN ? "প্রকল্প সম্পর্কে" : "About Project",
   footerDisclaimer: lang === LANGS.BN ? "ডিসক্লেইমার" : "Disclaimer",
   footerData: lang === LANGS.BN ? "ডেটা সোর্স" : "Data Sources",
