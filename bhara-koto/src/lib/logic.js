@@ -63,39 +63,61 @@ export async function calcFare({ chart, from, to }) {
     return { standard, student, usedPredefined: !!row?.fareBDT };
 }
 
-/** Direct routes: buses that contain both stations in order */
-export function findDirect({ routes, from, to }) {
+const indexOfStation = (route, name) => {
+    const n = normalize(name);
+    return route.stations.findIndex((s) => normalize(s) === n);
+  };
+  
+  /**
+   * Buses serving both stations. Routes are treated as running both ways.
+   * Sorted by how many listed stations lie between the two.
+   */
+  export function findDirect({ routes, from, to }) {
     const res = [];
     for (const r of routes) {
-        const i = r.stations.findIndex((s) => s && s.trim() === from);
-        const j = r.stations.findIndex((s) => s && s.trim() === to);
-        if (i >= 0 && j >= 0 && i < j) res.push(r);
+      const i = indexOfStation(r, from);
+      const j = indexOfStation(r, to);
+      if (i >= 0 && j >= 0 && i !== j) res.push({ ...r, stops: Math.abs(j - i) });
     }
-    return res;
-}
-
-/** Two-bus options: pick a transfer station T where a bus goes from from->T and another T->to */
-export function findTwoBus({ routes, from, to, limit = 12 }) {
-    const options = [];
-    const stationsSet = new Set(
-        routes.flatMap((r) => r.stations.filter(Boolean).map((s) => s.trim()))
-    );
-
-    for (const T of stationsSet) {
-        if (T === from || T === to) continue;
-
-        const A = findDirect({ routes, from, to: T });
-        if (A.length === 0) continue;
-        const B = findDirect({ routes, from: T, to });
-        if (B.length === 0) continue;
-
-        for (const a of A) {
-            for (const b of B) {
-                if (a.busEn === b.busEn && a.busBn === b.busBn) continue; // avoid same bus trivially
-                options.push({ transfer: T, busA: a, busB: b });
-                if (options.length >= limit) return options;
-            }
+    return res.sort((a, b) => a.stops - b.stops);
+  }
+  
+  /**
+   * Two-bus options: a bus from `from` and another to `to` that share a station.
+   * One best transfer point per pair of buses, shortest trips first.
+   */
+  export function findTwoBus({ routes, from, to, limit = 12 }) {
+    const nFrom = normalize(from);
+    const nTo = normalize(to);
+  
+    const routesWith = (name) =>
+      routes
+        .map((r, ri) => ({ r, ri, i: indexOfStation(r, name) }))
+        .filter((x) => x.i >= 0);
+  
+    const fromRoutes = routesWith(from);
+    const toRoutes = routesWith(to);
+    const best = new Map();
+  
+    for (const a of fromRoutes) {
+      const aNames = a.r.stations.map(normalize);
+      for (const b of toRoutes) {
+        if (a.ri === b.ri) continue;
+        const bPos = new Map(b.r.stations.map((s, k) => [normalize(s), k]));
+        for (let k = 0; k < aNames.length; k++) {
+          const name = aNames[k];
+          if (!name || name === nFrom || name === nTo) continue;
+          const kb = bPos.get(name);
+          if (kb === undefined) continue;
+          const stops = Math.abs(k - a.i) + Math.abs(b.i - kb);
+          const key = `${a.ri}|${b.ri}`;
+          const prev = best.get(key);
+          if (!prev || stops < prev.stops) {
+            best.set(key, { transfer: a.r.stations[k].trim(), busA: a.r, busB: b.r, stops });
+          }
         }
+      }
     }
-    return options;
-}
+  
+    return [...best.values()].sort((x, y) => x.stops - y.stops).slice(0, limit);
+  }

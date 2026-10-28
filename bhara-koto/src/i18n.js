@@ -28,6 +28,9 @@ export const t = (lang) => ({
       : "Actual fares may differ slightly; toll buses can charge up to ৳5 more.",
   fareEstimated:
     lang === LANGS.BN ? "রাস্তার দূরত্ব অনুযায়ী আনুমানিক ভাড়া" : "Estimated from road distance",
+  unknownStation:
+    lang === LANGS.BN ? "তালিকা থেকে সঠিক স্টেশন বেছে নিন।" : "Please pick a station from the list.",
+  stationsAway: lang === LANGS.BN ? "স্টেশন" : "stations",
   footerAbout: lang === LANGS.BN ? "প্রকল্প সম্পর্কে" : "About Project",
   footerDisclaimer: lang === LANGS.BN ? "ডিসক্লেইমার" : "Disclaimer",
   footerData: lang === LANGS.BN ? "ডেটা সোর্স" : "Data Sources",

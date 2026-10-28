@@ -3,7 +3,7 @@ import { LANGS, t } from "./i18n";
 import LocationSelect from "./components/LocationSelect.jsx";
 import { loadBusRoutes, loadFareChart } from "./lib/data.js";
 import { calcFare, estimateFareByDistance, findDirect, findTwoBus, ZERO_FARE_REASON } from "./lib/logic.js";
-import { BDT } from "./lib/utils.js";
+import { BDT, normalize } from "./lib/utils.js";
 import Footer from "./components/Footer.jsx";
 import Tabs from "./components/Tabs.jsx"; // Assuming this is a horizontal tab component
 import FareTable from "./components/FareTable.jsx";
@@ -111,19 +111,30 @@ export default function App() {
 
   async function onGo() {
     if (!loaded) return;
-    clearResults();                                  // replaces setFare(null); setDirect([]); setTransfers([]);
+    clearResults();
 
-    const f = await calcFare({ chart, from, to });
-    if (f?.error) {
-      setFare({ error: f.error });
+    if (!from || !to) {
+      setFare({ error: "empty-input" });
       return;
     }
-    setFare(f);
+
+    // The field is free text, so make sure both are real stations
+    const known = new Set(stations.map(normalize));
+    if (!known.has(normalize(from)) || !known.has(normalize(to))) {
+      setFare({ error: "unknown-station" });
+      return;
+    }
+
+    // Fare may be missing for some pairs; buses are still searched
+    const f = await calcFare({ chart, from, to });
+    setFare(f?.error ? { error: f.error } : f);
+
+    if (normalize(from) === normalize(to)) return; // same station: nothing to search
 
     const d = findDirect({ routes, from, to });
     setDirect(d);
     if (d.length === 0) setTransfers(findTwoBus({ routes, from, to }));
-    setSearched(true);                               // new
+    setSearched(true);
   }
 
   function onMapRouteReady(route) {
@@ -628,6 +639,7 @@ export default function App() {
             )}
           </div>
           {fare && fare.error === "empty-input" && <Notice text="From/To পূরণ করুন।" />}
+          {fare && fare.error === "unknown-station" && <Notice text={tr.unknownStation} />}
           {fare && fare.error === "no-source" && (
             <div style={{ marginTop: 12 }}>
               <Notice text="এই জোড়ার জন্য চার্টে ভাড়া/দূরত্ব নেই। অনুগ্রহ করে আমাদের সাথে যোগাযোগ করুন।" />
@@ -688,7 +700,7 @@ export default function App() {
                       <li key={i} style={card}>
                         <div><strong>{tr.englishBus}:</strong> {r.busEn || "-"}</div>
                         {r.busBn && <div><strong>{tr.banglaBus}:</strong> {r.busBn}</div>}
-                        {/* <div><strong>{tr.banglaBus}:</strong> {r.busBn || "-"}</div> */}
+                        <div style={{ color: "#64748b", fontSize: "0.9rem" }}>~{r.stops} {tr.stationsAway}</div>
                       </li>
                     ))}
                   </ul>
@@ -706,6 +718,7 @@ export default function App() {
                           <div><strong>A:</strong> {[o.busA.busEn, o.busA.busBn].filter(Boolean).join(" / ") || "-"}</div>
                           <div><strong>{tr.transferAt}:</strong> {o.transfer}</div>
                           <div><strong>B:</strong> {[o.busB.busEn, o.busB.busBn].filter(Boolean).join(" / ") || "-"}</div>
+                          <div style={{ color: "#64748b", fontSize: "0.9rem" }}>~{o.stops} {tr.stationsAway}</div>
                         </li>
                       ))}
                     </ul>
