@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { LANGS, t } from "./i18n";
 import LocationSelect from "./components/LocationSelect.jsx";
 import { loadBusRoutes, loadFareChart } from "./lib/data.js";
@@ -9,6 +9,7 @@ import Tabs from "./components/Tabs.jsx"; // Assuming this is a horizontal tab c
 import FareTable from "./components/FareTable.jsx";
 import Notices from "./components/Notices.jsx";
 import RouteMapPicker from "./components/RouteMapPicker.jsx";
+import { track } from "./lib/track.js";
 
 const MAJOR_UPDATE_DISMISS_KEY = "bhara-koto-major-update-dismissed";
 
@@ -103,6 +104,12 @@ export default function App() {
     document.documentElement.lang = lang === LANGS.BN ? "bn" : "en";
   }, [lang]);
 
+  const firstTabEvent = useRef(true);
+  useEffect(() => {
+    track(firstTabEvent.current ? "page_view" : "tab_change", { tab });
+    firstTabEvent.current = false;
+  }, [tab]);
+
   function clearResults() {
     setFare(null);
     setDirect([]);
@@ -116,6 +123,7 @@ export default function App() {
 
     if (!from || !to) {
       setFare({ error: "empty-input" });
+      track("fare_search", { mode: "station", result: "invalid" });
       return;
     }
 
@@ -123,19 +131,30 @@ export default function App() {
     const known = new Set(stations.map(normalize));
     if (!known.has(normalize(from)) || !known.has(normalize(to))) {
       setFare({ error: "unknown-station" });
+      track("fare_search", { mode: "station", result: "invalid" });
       return;
     }
+
+    // Official spelling, so the sheet counts each station once
+    const official = (name) => stations.find((s) => normalize(s) === normalize(name)) || "";
+    const fromName = official(from);
+    const toName = official(to);
 
     // Fare may be missing for some pairs; buses are still searched
     const f = await calcFare({ chart, from, to });
     setFare(f?.error ? { error: f.error } : f);
+    const fareFlag = f?.error ? "nofare" : "fare";
 
-    if (normalize(from) === normalize(to)) return; // same station: nothing to search
+    if (normalize(from) === normalize(to)) {
+      track("fare_search", { mode: "station", from: fromName, to: toName, result: "same-station" });
+      return;
+    }
 
     const d = findDirect({ routes, from, to });
     setDirect(d);
+    let options = [];
     if (d.length === 0) {
-      const options = findTwoBus({ routes, from, to }).map((o) => {
+      options = findTwoBus({ routes, from, to }).map((o) => {
         const legA = legFare(fareIndex, from, o.transfer);
         const legB = legFare(fareIndex, o.transfer, to);
         const total =
@@ -147,6 +166,9 @@ export default function App() {
       setTransfers(options);
     }
     setSearched(true);
+
+    const buses = d.length > 0 ? "direct" : options.length > 0 ? "transfer" : "none";
+    track("fare_search", { mode: "station", from: fromName, to: toName, result: `${buses}|${fareFlag}` });
   }
 
   function onMapRouteReady(route) {
@@ -162,6 +184,8 @@ export default function App() {
       setFare({ error: "no-source" });
       return;
     }
+
+    track("map_route", { mode: "map", result: "ok" });
 
     setFrom(route.fromLabel);
     setTo(route.toLabel);
