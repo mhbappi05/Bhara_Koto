@@ -46,6 +46,8 @@ export default function Footer({ tr }) {
         </div>
 
         <nav style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
+          <a href="/about.html" style={linkStyle}>{tr.footerAbout}</a>
+          <a href="/contact.html" style={linkStyle}>{tr.footerContact}</a>
           <a href="/privacy.html" style={linkStyle}>{tr.footerPrivacy}</a>
         </nav>
       </div>
