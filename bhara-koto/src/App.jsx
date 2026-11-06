@@ -123,7 +123,7 @@ export default function App() {
 
     if (!from || !to) {
       setFare({ error: "empty-input" });
-      track("fare_search", { mode: "station", result: "invalid" });
+      track("fare_search", { mode: "station", result: "invalid-empty" });
       return;
     }
 
@@ -131,7 +131,12 @@ export default function App() {
     const known = new Set(stations.map(normalize));
     if (!known.has(normalize(from)) || !known.has(normalize(to))) {
       setFare({ error: "unknown-station" });
-      track("fare_search", { mode: "station", result: "invalid" });
+      track("fare_search", {
+        mode: "station",
+        from: from.slice(0, 40),
+        to: to.slice(0, 40),
+        result: "invalid-unknown",
+      });
       return;
     }
 
