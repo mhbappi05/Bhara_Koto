@@ -26,11 +26,6 @@ export function estimateFareByDistance(distanceKm) {
   };
 }
 
-/** Calculate fare following the spec:
- * 1) Use predefined fare if available
- * 2) Else, query Google Distance Matrix (if API key provided)
- * 3) Apply min fares and student discount
- */
 export async function calcFare({ chart, from, to }) {
   if (!from || !to) return { error: "empty-input" };
   if (normalize(from) === normalize(to))
