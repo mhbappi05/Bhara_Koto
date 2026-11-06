@@ -38,6 +38,7 @@ export const t = (lang) => ({
   totalFare: lang === LANGS.BN ? "মোট ভাড়া" : "Total fare",
   legFareMissing:
     lang === LANGS.BN ? "এই যাত্রার ভাড়া চার্টে পাওয়া যায়নি" : "Fare for this trip isn't in the chart",
+  footerPrivacy: lang === LANGS.BN ? "গোপনীয়তা নীতি" : "Privacy Policy",
   footerAbout: lang === LANGS.BN ? "প্রকল্প সম্পর্কে" : "About Project",
   footerDisclaimer: lang === LANGS.BN ? "ডিসক্লেইমার" : "Disclaimer",
   footerData: lang === LANGS.BN ? "ডেটা সোর্স" : "Data Sources",

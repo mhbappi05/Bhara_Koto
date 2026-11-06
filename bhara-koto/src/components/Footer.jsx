@@ -45,11 +45,9 @@ export default function Footer({ tr }) {
           <strong style={{ fontSize: 18, color: "#1f2937" }}>ভাড়া কত?</strong>
         </div>
 
-        {/* <nav style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
-          <a href="#" style={linkStyle}>{tr.footerAbout}</a>
-          <a href="#" style={linkStyle}>{tr.footerDisclaimer}</a>
-          <a href="#" style={linkStyle}>{tr.footerData}</a>
-        </nav> */}
+        <nav style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
+          <a href="/privacy.html" style={linkStyle}>{tr.footerPrivacy}</a>
+        </nav>
       </div>
 
       {/* Bottom Section */}
